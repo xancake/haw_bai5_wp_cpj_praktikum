@@ -21,7 +21,6 @@ public class Friseur extends Thread {
 	 */
 	public Friseur(FriseurSalon salon, TimeUnit timeUnit, int haareSchneidenDauer) {
 		_salon = Objects.requireNonNull(salon);
-		_salon.setFriseur(this);
 		_timeUnit = Objects.requireNonNull(timeUnit);
 		_haareSchneidenDauer = haareSchneidenDauer;
 		setName("Friseur");
@@ -53,7 +52,9 @@ public class Friseur extends Thread {
 			try {
 				System.out.println(getName() + " wartet auf neue Kunden!");
 				wait();
-			} catch (InterruptedException e) {}
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
 		}
 	}
 	
@@ -66,7 +67,9 @@ public class Friseur extends Thread {
 		System.out.println(getName() + " schneidet " + kunde.getName() + " die Haare!");
 		try {
 			_timeUnit.sleep(_haareSchneidenDauer);
-		} catch (InterruptedException e) {}
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
 		System.out.println(getName() + " hat " + kunde.getName() + " die Haare geschnitten!");
 	}
 }

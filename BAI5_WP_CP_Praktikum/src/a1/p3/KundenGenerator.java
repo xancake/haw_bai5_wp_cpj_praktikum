@@ -19,7 +19,7 @@ public class KundenGenerator extends Thread {
 		_salon = Objects.requireNonNull(salon);
 		_timeUnit = Objects.requireNonNull(timeUnit);
 		_generatorIntervall = generatorIntervall;
-		
+		setName("Kundengenerator");
 	}
 	
 	@Override
@@ -29,7 +29,9 @@ public class KundenGenerator extends Thread {
 			kunde.start();
 			try {
 				_timeUnit.sleep(_generatorIntervall);
-			} catch (InterruptedException e) {}
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
 		}
 	}
 }

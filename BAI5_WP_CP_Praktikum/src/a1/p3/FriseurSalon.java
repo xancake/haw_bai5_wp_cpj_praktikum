@@ -14,7 +14,8 @@ public class FriseurSalon {
 	private int _warteraumPlatz;
 	private Queue<Kunde> _warteraum;
 	private Friseur _friseur;
-	
+	private volatile boolean _istGeoeffnet;
+
 	/**
 	 * Instanziiert einen neuen Salon.
 	 * @param wartePlaetze Die Anzahl der Warteplätze, die der Salon hat
@@ -23,15 +24,7 @@ public class FriseurSalon {
 		_warteraumPlatz = wartePlaetze;
 		_warteraum = new LinkedList<>();
 	}
-	
-	/**
-	 * Legt den Friseur fest, der im Friseursalon seinen Dienst verrichtet.
-	 * @param friseur Der Friseur
-	 */
-	void setFriseur(Friseur friseur) {
-		_friseur = Objects.requireNonNull(friseur);
-	}
-	
+
 	/**
 	 * Lässt einen Kunden den Salon betreten. Wenn der Friseursalon freie Warteplätze hat,
 	 * dann stellt sich der Kunde dort an und benachrichtigt den Friseur. Wenn keine freien
@@ -40,16 +33,20 @@ public class FriseurSalon {
 	 * @param kunde Der Kunde
 	 */
 	public synchronized void betreten(Kunde kunde) {
-		StringBuffer sb = new StringBuffer();
-		sb.append(kunde.getName()).append(" betritt den Salon");
-		if(_warteraum.size() < _warteraumPlatz) {
-			sb.append(" und stellt sich an!");
-			_warteraum.offer(kunde);
-			_friseur.aufwecken();
+		if (_istGeoeffnet) {
+			StringBuffer sb = new StringBuffer();
+			sb.append(kunde.getName()).append(" betritt den Salon");
+			if (_warteraum.size() < _warteraumPlatz) {
+				sb.append(" und stellt sich an!");
+				_warteraum.offer(kunde);
+				_friseur.aufwecken();
+			} else {
+				sb.append(" und verlässt ihn wieder, da kein Platz frei ist!");
+			}
+			System.out.println(sb);
 		} else {
-			sb.append(" und verlässt ihn wieder, da kein Platz frei ist!");
+			System.out.println(" Der Salon ist geschlossen "+ kunde.getName() + " geht wieder!");
 		}
-		System.out.println(sb);
 	}
 	
 	/**
@@ -66,5 +63,27 @@ public class FriseurSalon {
 	 */
 	public synchronized Kunde naechsterKunde() {
 		return _warteraum.poll();
+	}
+	
+	/**
+	 * Öffnet den Friseursalon.
+	 * @param friseur Der Friseur der seinen Dienst in dem Salon verrichtet
+	 */
+	public synchronized void oeffne(Friseur friseur) {
+		_friseur = Objects.requireNonNull(friseur);
+		_istGeoeffnet = true;
+		_friseur.start();
+		System.out.println("Der Salon ist nun geöffnet!");
+	}
+	
+	/**
+	 * Schließt den Friseursalon.
+	 * <p>Dabei wird dem Friseur auch mitgeteilt, dass er seine Arbeit niederlegen kann.
+	 */
+	public synchronized void schliesse() {
+		_istGeoeffnet = false;
+		_friseur.interrupt();
+		_warteraum.clear();
+		System.out.println("Der Salon ist nun geschlossen!");
 	}
 }

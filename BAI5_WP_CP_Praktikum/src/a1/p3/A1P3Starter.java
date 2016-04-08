@@ -8,7 +8,12 @@ public class A1P3Starter {
 		Friseur friseur = new Friseur(salon, TimeUnit.SECONDS, 5);
 		KundenGenerator generator = new KundenGenerator(salon, TimeUnit.SECONDS, 2);
 		
-		friseur.start();
+		salon.oeffne(friseur);
 		generator.start();
+		try {
+			TimeUnit.SECONDS.sleep(30);
+		} catch (InterruptedException e) {}
+		salon.schliesse();
+		generator.interrupt();
 	}
 }
