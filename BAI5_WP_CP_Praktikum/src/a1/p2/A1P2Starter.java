@@ -24,7 +24,7 @@ public class A1P2Starter {
 			long before = System.nanoTime();
 			yield();
 			long diff = System.nanoTime()-before;
-			System.out.println("Zeitscheibenl‰nge: " + diff + "ns");
+			System.out.println("Zeitscheibenl√§nge: " + diff + "ns");
 		}
 	}
 	

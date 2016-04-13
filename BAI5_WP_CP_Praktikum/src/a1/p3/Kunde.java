@@ -10,7 +10,7 @@ public class Kunde extends Thread {
 	
 	/**
 	 * Instanziiert einen Kunden.
-	 * @param salon Der Friseursalon, zu dem der Kunde gehen möchte
+	 * @param salon Der Friseursalon, zu dem der Kunde gehen mÃ¶chte
 	 */
 	public Kunde(FriseurSalon salon) {
 		_salon = Objects.requireNonNull(salon);

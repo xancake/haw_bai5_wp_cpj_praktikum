@@ -6,8 +6,8 @@ import java.util.Queue;
 
 /**
  * Ein Friseursalon. In dem Friseursalon arbeitet ein {@link Friseur}.
- * {@link Kunde}n können den Friseursalon betreten um sich die Haare schneiden zu lassen.
- * Da es nur einen Friseur gibt, könnte es sein, dass ein Kunde entsprechend in
+ * {@link Kunde}n kÃ¶nnen den Friseursalon betreten um sich die Haare schneiden zu lassen.
+ * Da es nur einen Friseur gibt, kÃ¶nnte es sein, dass ein Kunde entsprechend in
  * eine Warteschlange kommt.
  */
 public class FriseurSalon {
@@ -18,7 +18,7 @@ public class FriseurSalon {
 
 	/**
 	 * Instanziiert einen neuen Salon.
-	 * @param wartePlaetze Die Anzahl der Warteplätze, die der Salon hat
+	 * @param wartePlaetze Die Anzahl der WarteplÃ¤tze, die der Salon hat
 	 */
 	public FriseurSalon(int wartePlaetze) {
 		_warteraumPlatz = wartePlaetze;
@@ -26,9 +26,9 @@ public class FriseurSalon {
 	}
 
 	/**
-	 * Lässt einen Kunden den Salon betreten. Wenn der Friseursalon freie Warteplätze hat,
+	 * LÃ¤sst einen Kunden den Salon betreten. Wenn der Friseursalon freie WarteplÃ¤tze hat,
 	 * dann stellt sich der Kunde dort an und benachrichtigt den Friseur. Wenn keine freien
-	 * Plätze vorhanden sind, verlässt er den Salon wieder ohne sich die Haare schneiden zu
+	 * PlÃ¤tze vorhanden sind, verlÃ¤sst er den Salon wieder ohne sich die Haare schneiden zu
 	 * lassen.
 	 * @param kunde Der Kunde
 	 */
@@ -41,7 +41,7 @@ public class FriseurSalon {
 				_warteraum.offer(kunde);
 				_friseur.aufwecken();
 			} else {
-				sb.append(" und verlässt ihn wieder, da kein Platz frei ist!");
+				sb.append(" und verlï¿½sst ihn wieder, da kein Platz frei ist!");
 			}
 			System.out.println(sb);
 		} else {
@@ -50,7 +50,7 @@ public class FriseurSalon {
 	}
 	
 	/**
-	 * Prüft, ob die Warteschlange des Salons leer ist oder nicht.
+	 * PrÃ¼ft, ob die Warteschlange des Salons leer ist oder nicht.
 	 * @return {@code true} wenn die Warteschlange leer ist, ansonsten {@code false}
 	 */
 	public synchronized boolean istWarteschlangeLeer() {
@@ -58,26 +58,26 @@ public class FriseurSalon {
 	}
 	
 	/**
-	 * Gibt den nächsten Kunden aus der Warteschlange zurück und entfernt ihn aus dieser.
-	 * @return Der nächste Kunde
+	 * Gibt den nÃ¤chsten Kunden aus der Warteschlange zurÃ¼ck und entfernt ihn aus dieser.
+	 * @return Der nÃ¤chste Kunde
 	 */
 	public synchronized Kunde naechsterKunde() {
 		return _warteraum.poll();
 	}
 	
 	/**
-	 * Öffnet den Friseursalon.
+	 * Ã–ffnet den Friseursalon.
 	 * @param friseur Der Friseur der seinen Dienst in dem Salon verrichtet
 	 */
 	public synchronized void oeffne(Friseur friseur) {
 		_friseur = Objects.requireNonNull(friseur);
 		_istGeoeffnet = true;
 		_friseur.start();
-		System.out.println("Der Salon ist nun geöffnet!");
+		System.out.println("Der Salon ist nun geÃ¶ffnet!");
 	}
 	
 	/**
-	 * Schließt den Friseursalon.
+	 * SchlieÃŸt den Friseursalon.
 	 * <p>Dabei wird dem Friseur auch mitgeteilt, dass er seine Arbeit niederlegen kann.
 	 */
 	public synchronized void schliesse() {

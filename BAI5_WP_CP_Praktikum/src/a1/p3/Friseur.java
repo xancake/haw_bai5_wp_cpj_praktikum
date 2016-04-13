@@ -12,12 +12,12 @@ public class Friseur extends Thread {
 	private int _haareSchneidenDauer;
 	
 	/**
-	 * Instanziiert einen neuen Friseur. Der Friseur "meldet sich" selbständig bei dem
-	 * {@link FriseurSalon} für den er arbeitet an. Es kann konfiruriert werden, wielange
-	 * der Friseur zum Schneiden der Haare benötigt.
+	 * Instanziiert einen neuen Friseur. Der Friseur "meldet sich" selbstÃ¤ndig bei dem
+	 * {@link FriseurSalon} fÃ¼r den er arbeitet an. Es kann konfiruriert werden, wielange
+	 * der Friseur zum Schneiden der Haare benÃ¶tigt.
 	 * @param salon Der Salon in dem der Friseur arbeitet
 	 * @param timeUnit Die Zeiteinheit in der die Dauer gemessen wird
-	 * @param haareSchneidenDauer Die Dauer in der angegebenen Zeiteinheit, die für das Haareschneiden benötigt wird
+	 * @param haareSchneidenDauer Die Dauer in der angegebenen Zeiteinheit, die fÃ¼r das Haareschneiden benÃ¶tigt wird
 	 */
 	public Friseur(FriseurSalon salon, TimeUnit timeUnit, int haareSchneidenDauer) {
 		_salon = Objects.requireNonNull(salon);
@@ -35,7 +35,7 @@ public class Friseur extends Thread {
 	}
 	
 	/**
-	 * Weckt den Friseur auf, falls er gerade schläft weil keine Kunden da waren.
+	 * Weckt den Friseur auf, falls er gerade schlÃ¤ft weil keine Kunden da waren.
 	 * @see #aufKundenWarten()
 	 */
 	public synchronized void aufwecken() {
@@ -43,8 +43,8 @@ public class Friseur extends Thread {
 	}
 	
 	/**
-	 * Wartet auf einen Kunden und schläft solange. Der Friseur kann dann geweckt werden,
-	 * wenn ein neuer Kunde die Haare geschnitten bekommen möchte.
+	 * Wartet auf einen Kunden und schlÃ¤ft solange. Der Friseur kann dann geweckt werden,
+	 * wenn ein neuer Kunde die Haare geschnitten bekommen mÃ¶chte.
 	 * @see #aufwecken()
 	 */
 	private synchronized void aufKundenWarten() {
@@ -59,7 +59,7 @@ public class Friseur extends Thread {
 	}
 	
 	/**
-	 * Schneidet dem übergebenen Kunden die Haare.
+	 * Schneidet dem Ã¼bergebenen Kunden die Haare.
 	 * Im Zweck der Simulation wird das Haareschneiden per zeitlichem Sleep dargestellt.
 	 * @param kunde Der Kunde dessen Haare geschnitten werden sollen
 	 */

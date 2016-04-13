@@ -4,8 +4,8 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Ein Generator für {@link Kunde}n. Der Generator generiert in einem festgelegten Zeitintervall Kunden,
- * die dann eigenständig den {@link FriseurSalon} betreten wollen.
+ * Ein Generator fÃ¼r {@link Kunde}n. Der Generator generiert in einem festgelegten Zeitintervall Kunden,
+ * die dann eigenstÃ¤ndig den {@link FriseurSalon} betreten wollen.
  */
 public class KundenGenerator extends Thread {
 	private FriseurSalon _salon;
