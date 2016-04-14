@@ -25,7 +25,9 @@ public class KundenGenerator extends Thread {
 	@Override
 	public void run() {
 		while(!isInterrupted()) {
-			Kunde kunde = new Kunde(_salon);
+			int haarLaenge = (int)(Math.random() * 100);
+			int zielLaenge = haarLaenge - (int)(Math.random() * haarLaenge);
+			Kunde kunde = new Kunde(_salon, haarLaenge, zielLaenge);
 			kunde.start();
 			try {
 				_timeUnit.sleep(_generatorIntervall);

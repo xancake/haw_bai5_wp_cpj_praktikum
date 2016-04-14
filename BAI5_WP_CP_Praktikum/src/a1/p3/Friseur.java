@@ -28,10 +28,14 @@ public class Friseur extends Thread {
 	
 	@Override
 	public void run() {
-		while(!isInterrupted()) {
-			aufKundenWarten();
-			haareSchneiden(_salon.naechsterKunde());
-		}
+		_salon.oeffne(this);
+		try {
+			while(!isInterrupted()) {
+				Kunde kunde = aufKundenWarten();
+				haareSchneiden(kunde);
+			}
+		} catch(InterruptedException e) {}
+		_salon.schliesse();
 	}
 	
 	/**
@@ -47,15 +51,12 @@ public class Friseur extends Thread {
 	 * wenn ein neuer Kunde die Haare geschnitten bekommen möchte.
 	 * @see #aufwecken()
 	 */
-	private synchronized void aufKundenWarten() {
-		while(_salon.istWarteschlangeLeer()) {
-			try {
-				System.out.println(getName() + " wartet auf neue Kunden!");
-				wait();
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
+	private synchronized Kunde aufKundenWarten() throws InterruptedException {
+		System.out.println(getName() + " wartet auf neue Kunden!");
+		while(_salon.getWarteraum().istLeer()) {
+			wait();
 		}
+		return _salon.getWarteraum().naechster();
 	}
 	
 	/**
@@ -65,10 +66,13 @@ public class Friseur extends Thread {
 	 */
 	private void haareSchneiden(Kunde kunde) {
 		System.out.println(getName() + " schneidet " + kunde.getName() + " die Haare!");
-		try {
-			_timeUnit.sleep(_haareSchneidenDauer);
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
+		while(!kunde.isZufrieden()) {
+			try {
+				_timeUnit.sleep(_haareSchneidenDauer);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
+			kunde.haareSchneiden(5);
 		}
 		System.out.println(getName() + " hat " + kunde.getName() + " die Haare geschnitten!");
 	}
