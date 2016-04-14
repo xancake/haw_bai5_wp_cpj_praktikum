@@ -1,6 +1,6 @@
 package a1.p3;
 
-import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Ein Friseursalon. In dem Friseursalon arbeitet ein {@link Friseur}.
@@ -14,13 +14,23 @@ public class FriseurSalon {
 	private volatile boolean _istGeoeffnet;
 	
 	/**
-	 * Instanziiert einen neuen Salon.
+	 * Instanziiert einen neuen Salon. Dabei wird auch ein Friseur erzeugt.
 	 * @param wartePlaetze Die Anzahl der Warteplätze, die der Salon hat
+	 * @param timeUnit Die Zeiteinheit in der die Dauer gemessen wird
+	 * @param haareSchneidenDauer Die Dauer in der angegebenen Zeiteinheit, die für das Haareschneiden benötigt wird
 	 */
-	public FriseurSalon(int wartePlaetze) {
+	public FriseurSalon(int wartePlaetze, TimeUnit timeUnit, int haareSchneidenDauer) {
 		_warteraum = new Warteraum(wartePlaetze);
+		_friseur = new Friseur(_warteraum, timeUnit, haareSchneidenDauer);
 	}
 	
+	/**
+	 * Gibt den Friseur des Salons zurück. Blockiert, bis der Salon geöffnet wurde.
+	 * @return Der Friseur des Salons
+	 * @throws InterruptedException Wenn der aufrufende Thread beim Warten interrupted wurde
+	 * @see #istGeoffnet()
+	 * @see #oeffne()
+	 */
 	public synchronized Friseur getFriseur() throws InterruptedException {
 		while(!_istGeoeffnet) {
 			wait();
@@ -28,6 +38,13 @@ public class FriseurSalon {
 		return _friseur;
 	}
 	
+	/**
+	 * Gibt den Warteraum des Salons zurück. Blockiert, bis der Laden geöffnet wurde.
+	 * @return Der Warteraum des Salons
+	 * @throws InterruptedException Wenn der aufrufende Thread beim Warten interrupted wurde
+	 * @see #istGeoffnet()
+	 * @see #oeffne()
+	 */
 	public synchronized Warteraum getWarteraum() throws InterruptedException {
 		while(!_istGeoeffnet) {
 			wait();
@@ -36,22 +53,34 @@ public class FriseurSalon {
 	}
 	
 	/**
-	 * Öffnet den Friseursalon.
-	 * @param friseur Der Friseur der seinen Dienst in dem Salon verrichtet
+	 * Gibt zurück, ob der Salon geöffnet ist oder nicht.
+	 * @return {@code true} wenn der Salon geöffnet ist, ansonsten {@code false}
 	 */
-	public synchronized void oeffne(Friseur friseur) {
-		_friseur = Objects.requireNonNull(friseur);
+	public synchronized boolean istGeoffnet() {
+		return _istGeoeffnet;
+	}
+	
+	/**
+	 * Öffnet den Friseursalon.
+	 */
+	public synchronized void oeffne() {
+		System.out.println("[SALON] wird geöffnet!");
+		_friseur.start();
 		_istGeoeffnet = true;
 		notify();
-		System.out.println("Der Salon ist nun geöffnet!");
+		System.out.println("[SALON] ist nun geöffnet!");
 	}
 	
 	/**
 	 * Schließt den Friseursalon.
 	 */
 	public synchronized void schliesse() {
+		System.out.println("[SALON] wird nun geschlossen!");
 		_istGeoeffnet = false;
-		_warteraum.alleRausschmeissen();
-		System.out.println("Der Salon ist nun geschlossen!");
+		_friseur.interrupt();
+		try {
+			_friseur.join();
+		} catch (InterruptedException e) {}
+		System.out.println("[SALON] ist nun geschlossen!");
 	}
 }

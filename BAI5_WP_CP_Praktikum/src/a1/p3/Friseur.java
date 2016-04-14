@@ -4,23 +4,24 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Ein Friseur. Friseure schneiden {@link Kunde}n im {@link FriseurSalon} die Haare.
+ * Ein Friseur. Friseure schneiden {@link Kunde}n in einem {@link FriseurSalon} die Haare.
+ * Der Friseur kennt nur den Warteraum des Salons und "holt sich" daher immer den nächsten
+ * Kunden, dem er die Haare schneiden soll.
  */
 public class Friseur extends Thread {
-	private FriseurSalon _salon;
+	private Warteraum _warteraum;
 	private TimeUnit _timeUnit;
 	private int _haareSchneidenDauer;
 	
 	/**
-	 * Instanziiert einen neuen Friseur. Der Friseur "meldet sich" selbständig bei dem
-	 * {@link FriseurSalon} für den er arbeitet an. Es kann konfiruriert werden, wielange
+	 * Instanziiert einen neuen Friseur. Es kann konfiguriert werden, wielange
 	 * der Friseur zum Schneiden der Haare benötigt.
-	 * @param salon Der Salon in dem der Friseur arbeitet
+	 * @param warteraum Der Warteraum des {@link FriseurSalon}s, in dem der Friseur arbeitet
 	 * @param timeUnit Die Zeiteinheit in der die Dauer gemessen wird
 	 * @param haareSchneidenDauer Die Dauer in der angegebenen Zeiteinheit, die für das Haareschneiden benötigt wird
 	 */
-	public Friseur(FriseurSalon salon, TimeUnit timeUnit, int haareSchneidenDauer) {
-		_salon = Objects.requireNonNull(salon);
+	public Friseur(Warteraum warteraum, TimeUnit timeUnit, int haareSchneidenDauer) {
+		_warteraum = Objects.requireNonNull(warteraum);
 		_timeUnit = Objects.requireNonNull(timeUnit);
 		_haareSchneidenDauer = haareSchneidenDauer;
 		setName("Friseur");
@@ -28,14 +29,13 @@ public class Friseur extends Thread {
 	
 	@Override
 	public void run() {
-		_salon.oeffne(this);
 		try {
 			while(!isInterrupted()) {
 				Kunde kunde = aufKundenWarten();
 				haareSchneiden(kunde);
 			}
 		} catch(InterruptedException e) {}
-		_salon.schliesse();
+		_warteraum.alleRausschmeissen();
 	}
 	
 	/**
@@ -52,11 +52,11 @@ public class Friseur extends Thread {
 	 * @see #aufwecken()
 	 */
 	private synchronized Kunde aufKundenWarten() throws InterruptedException {
-		System.out.println(getName() + " wartet auf neue Kunden!");
-		while(_salon.getWarteraum().istLeer()) {
+		System.out.println("[" + getName() + "] wartet auf neue Kunden!");
+		while(_warteraum.istLeer()) {
 			wait();
 		}
-		return _salon.getWarteraum().naechster();
+		return _warteraum.naechster();
 	}
 	
 	/**
@@ -65,7 +65,7 @@ public class Friseur extends Thread {
 	 * @param kunde Der Kunde dessen Haare geschnitten werden sollen
 	 */
 	private void haareSchneiden(Kunde kunde) {
-		System.out.println(getName() + " schneidet " + kunde.getName() + " die Haare!");
+		System.out.println("[" + getName() + "] schneidet " + kunde.getName() + " die Haare!");
 		while(!kunde.isZufrieden()) {
 			try {
 				_timeUnit.sleep(_haareSchneidenDauer);
@@ -74,6 +74,6 @@ public class Friseur extends Thread {
 			}
 			kunde.haareSchneiden(5);
 		}
-		System.out.println(getName() + " hat " + kunde.getName() + " die Haare geschnitten!");
+		System.out.println("[" + getName() + "] hat " + kunde.getName() + " die Haare geschnitten!");
 	}
 }
