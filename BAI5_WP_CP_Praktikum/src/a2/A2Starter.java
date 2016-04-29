@@ -53,12 +53,6 @@ public class A2Starter extends TestAndEnvironment_A {
 			}
 		}
 		
-//		try {
-//			Thread.sleep(10000);
-//		} catch(InterruptedException e) {
-//			e.printStackTrace();
-//		}
-//		
 		for(Bus bus : busse) {
 			bus.terminate();
 		}

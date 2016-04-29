@@ -1,7 +1,6 @@
 package a2;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class BusStop {
@@ -38,19 +37,28 @@ public class BusStop {
 		}
 	}
 	
-	public void aufBusWarten(Smurf smurf) throws InterruptedException {
+	public Bus inBusSteigen(Smurf smurf, int targetLocation) throws InterruptedException {
 		synchronized(_bussesAtBusStop) {
 			while(_bussesAtBusStop.isEmpty()) {
 				_bussesAtBusStop.wait();
 			}
+			
+			// Bus auswählen und einsteigen wenn Platz frei
+			for (Bus bus : _bussesAtBusStop) {
+				int direction = _location > targetLocation ? -1 : 1;
+				if (bus.getDirection() == direction) {
+					if(bus.tryEnterBus(smurf)) {
+						return bus;
+					}
+				}
+			}
+			
+			// Konnte bei keinem Bus einsteigen
+			return null;
 		}
 	}
 	
 	public int getLocation() {
 		return _location;
-	}
-	
-	public List<Bus> getBussesAtBusStop() {
-		return Collections.unmodifiableList(_bussesAtBusStop);
 	}
 }
