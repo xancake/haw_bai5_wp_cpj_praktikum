@@ -37,6 +37,26 @@ public class BusStop {
 		}
 	}
 	
+	public Bus ermittleBusNach(int targetLocation) throws InterruptedException {
+		synchronized(_bussesAtBusStop) {
+			while(_bussesAtBusStop.isEmpty()) {
+				_bussesAtBusStop.wait();
+			}
+			
+			int direction = _location > targetLocation ? -1 : 1;
+			
+			// Einen Bus ermitteln, der nach targetLocation fährt
+			for (Bus bus : _bussesAtBusStop) {
+				if (bus.getDirection() == direction) {
+					return bus;
+				}
+			}
+			
+			// Kein Bus fährt nach targetLocation
+			return null;
+		}
+	}
+	
 	public Bus inBusSteigen(Smurf smurf, int targetLocation) throws InterruptedException {
 		synchronized(_bussesAtBusStop) {
 			while(_bussesAtBusStop.isEmpty()) {

@@ -46,6 +46,7 @@ public class Bus extends Bus_A implements Runnable {
 				_currentStop = nextStop;
 				_currentStop.anfahren(this);
 				
+				// Passagiere benachrichtigen, dass eine Haltestelle erreicht wurde
 				synchronized(this) {
 					notifyAll();
 				}
@@ -57,9 +58,13 @@ public class Bus extends Bus_A implements Runnable {
 				if(nextStopLocation == _world.getFirstStop() || nextStopLocation == _world.getLastStop()) {
 					_direction *= -1; // Richtung umdrehen, wenn wir uns am Ende befinden
 				}
-				
-				_currentStop.abfahren(this);
-				_currentStop = null;
+
+				synchronized(_passengers) {
+					_currentStop.abfahren(this);
+					_currentStop = null;
+					// Schlümpfe die einsteigen wollen kicken
+					_passengers.notifyAll();
+				}
 				
 				takeTimeForBusRideTo(nextStop.getLocation());
 			}
@@ -88,11 +93,16 @@ public class Bus extends Bus_A implements Runnable {
 			try {
 				while(!hasFreeSeats()) {
 					_passengers.wait();
+					// Bus ist bereits abgefahren!
+					if(_currentStop == null) {
+						return false;
+					}
 				}
 				_passengers.add(smurf);
 				smurf.enter(this);
 				return true;
 			} catch(InterruptedException e) {
+				// TODO: Wirklich das Warten unterbrechen, wenn der Bus losfahren will
 				return false;
 			}
 		}
