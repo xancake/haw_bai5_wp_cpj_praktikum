@@ -16,10 +16,10 @@ public class Smurf extends Smurf_A implements Runnable {
 	@Override
 	public void run() {
 		// An der ersten Haltestelle des Schedules beginnen
-		BusStop currentBusStop = _world.getBusStop(schedule.next().getPlanedPosition());
+		SSI ssi = schedule.next();
+		BusStop currentBusStop = _world.getBusStop(ssi.getPlanedPosition());
 		
 		while(schedule.hasNext()) {
-			SSI ssi = schedule.next();
 			BusStop targetBusStop = _world.getBusStop(ssi.getPlanedPosition());
 			
 			if(currentBusStop.getLocation() != targetBusStop.getLocation()) {
@@ -44,8 +44,8 @@ public class Smurf extends Smurf_A implements Runnable {
 					}
 					
 					// Solange wir nicht am Ziel sind, müssen wir mit dem Bus fahren
+					beThere(currentBus);
 					while(targetBusStop.getLocation() != currentBusStop.getLocation()) {
-						beThere(currentBus);
 						synchronized(currentBus) {
 							currentBus.wait();
 							currentBusStop = currentBus.getCurrentBusStop();
@@ -65,6 +65,9 @@ public class Smurf extends Smurf_A implements Runnable {
 			} catch(InterruptedException e) {
 				e.printStackTrace();
 			}
+			
+			// nächsten Schedule-Eintrag
+			ssi = schedule.next();
 		}
 		lastDeed();
 	}

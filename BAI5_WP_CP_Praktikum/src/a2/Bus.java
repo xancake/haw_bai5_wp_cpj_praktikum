@@ -9,6 +9,7 @@ public class Bus extends Bus_A implements Runnable {
 	private SmurfWorld _world;
 	
 	private BusStop _currentStop;
+	private int _startBusStop;
 	private int _direction;
 	
 	private int _id;
@@ -27,7 +28,7 @@ public class Bus extends Bus_A implements Runnable {
 		if(seats < 1) {
 			throw new IllegalArgumentException("Im Bus muss mindestens ein Sitzplatz vorhanden sein");
 		}
-		_currentStop = _world.getBusStop(startBusStop);
+		_startBusStop = startBusStop;
 		_direction = direction;
 		_id = id;
 		_seats = seats;
@@ -38,18 +39,10 @@ public class Bus extends Bus_A implements Runnable {
 	public void run() {
 		_run = true;
 		try {
+			_currentStop = null;
+			BusStop nextStop = _world.getBusStop(_startBusStop);
+			
 			while(_run) {
-				int nextStopLocation = _currentStop.getLocation() + _direction;
-				BusStop nextStop = _world.getBusStop(nextStopLocation);
-				if(nextStopLocation == _world.getFirstStop() || nextStopLocation == _world.getLastStop()) {
-					_direction *= -1; // Richtung umdrehen, wenn wir uns am Ende befinden
-				}
-				
-				_currentStop.abfahren(this);
-				_currentStop = null;
-				
-				takeTimeForBusRideTo(nextStop.getLocation());
-				
 				_currentStop = nextStop;
 				_currentStop.anfahren(this);
 				
@@ -58,6 +51,17 @@ public class Bus extends Bus_A implements Runnable {
 				}
 				
 				takeTimeForStopoverAt(_currentStop.getLocation());
+				
+				int nextStopLocation = _currentStop.getLocation() + _direction;
+				nextStop = _world.getBusStop(nextStopLocation);
+				if(nextStopLocation == _world.getFirstStop() || nextStopLocation == _world.getLastStop()) {
+					_direction *= -1; // Richtung umdrehen, wenn wir uns am Ende befinden
+				}
+				
+				_currentStop.abfahren(this);
+				_currentStop = null;
+				
+				takeTimeForBusRideTo(nextStop.getLocation());
 			}
 		} catch(InterruptedException e) {
 		}

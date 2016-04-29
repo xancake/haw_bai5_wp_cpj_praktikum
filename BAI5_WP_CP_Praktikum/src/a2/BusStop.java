@@ -6,31 +6,36 @@ import java.util.List;
 
 public class BusStop {
 	private int _location;
+	private int _maxBusses;
 	private List<Bus> _bussesAtBusStop;
 	
-	public BusStop(int location) {
+	public BusStop(int location, int maxBusses) {
 		_location = location;
+		_maxBusses = maxBusses;
 		_bussesAtBusStop = new ArrayList<Bus>();
 	}
 	
-	public void anfahren(Bus bus) {
-		
-		synchronized(_bussesAtBusStop) {
-			bus.stopAt(_location);
-			_bussesAtBusStop.add(bus);
-			_bussesAtBusStop.notifyAll();
+	public void anfahren(Bus bus) throws InterruptedException {
+		synchronized(this) {
+			while(_bussesAtBusStop.size() >= _maxBusses) {
+				wait();
+			}
+			synchronized(_bussesAtBusStop) {
+				bus.stopAt(_location);
+				_bussesAtBusStop.add(bus);
+				_bussesAtBusStop.notifyAll();
+			}
 		}
-		
-		
 	}
 	
 	public void abfahren(Bus bus) {
-		
-		synchronized(_bussesAtBusStop) {
-			_bussesAtBusStop.remove(bus);
-			bus.startFrom(_location);
+		synchronized(this) {
+			synchronized(_bussesAtBusStop) {
+				_bussesAtBusStop.remove(bus);
+				bus.startFrom(_location);
+			}
+			notify();
 		}
-		
 	}
 	
 	public void aufBusWarten(Smurf smurf) throws InterruptedException {
@@ -45,7 +50,7 @@ public class BusStop {
 		return _location;
 	}
 	
-	public List<Bus> getBussesAtBusStop(){
+	public List<Bus> getBussesAtBusStop() {
 		return Collections.unmodifiableList(_bussesAtBusStop);
 	}
 }

@@ -19,7 +19,7 @@ public class A2Starter extends TestAndEnvironment_A {
 			Integer requestedMaximumNumberOfSmurfsPerSBus,
 			Integer requestedMaximumNumberOfBusesPerBusSTop
 	) {
-		SmurfWorld world = new SmurfWorld(requestedNumberOfBusSTops);
+		SmurfWorld world = new SmurfWorld(requestedNumberOfBusSTops, requestedMaximumNumberOfBusesPerBusSTop);
 		
 		List<Bus> busse = new ArrayList<Bus>(requestedNumberOfBuses);
 		for(int i=0; i<requestedNumberOfBuses; i++) {
