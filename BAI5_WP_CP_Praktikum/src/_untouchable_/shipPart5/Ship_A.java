@@ -98,7 +98,7 @@ abstract public class Ship_A extends CommonWOE {
     @ChunkPreamble ( lastModified="2012/07/23", lastModifiedBy="Michael Schäfers" )
     public final void dockAt( final int landing ){                              // adapt _HERE_
         appear( landing, Local.woeText, "docks in" );                           // adapt _HERE_
-    }//stopAt()
+    }//method()
     
     //JavaDOC                                                                   // adapt _HERE_
     /**
@@ -110,7 +110,7 @@ abstract public class Ship_A extends CommonWOE {
     @ChunkPreamble ( lastModified="2012/07/23", lastModifiedBy="Michael Schäfers" )
     public final void castOff( final int landing ){                             // adapt _HERE_
         vanish( landing, Local.woeText, "casts off from" );                     // adapt _HERE_
-    }//startsFrom()
+    }//method()
     
     //JavaDOC                                                                   // adapt _HERE_
     /**
@@ -124,7 +124,7 @@ abstract public class Ship_A extends CommonWOE {
     @ChunkPreamble ( lastModified="2013/06/10", lastModifiedBy="Michael Schäfers" )
     public final void takeTimeForSailingTo( final int landing )  throws InterruptedException {  // adapt _HERE_
         takeTimeForMotionTo( landing, Local.woeText, "sails to", "is going to reach" );         // adapt _HERE_
-    }//takeTimeForBusRideTo()
+    }//method()
     
     //JavaDOC                                                                   // adapt _HERE_
     /**
@@ -138,7 +138,7 @@ abstract public class Ship_A extends CommonWOE {
     @ChunkPreamble ( lastModified="2013/06/01", lastModifiedBy="Michael Schäfers" )
     public final void takeTimeForBoardingAt( final int landing ) throws InterruptedException {  // adapt _HERE_
         takeTimeForStopover( landing );
-    }//takeTimeForStopoverAt()
+    }//method()
     
     //JavaDOC                                                                   // adapt _HERE_
     /**
@@ -148,7 +148,7 @@ abstract public class Ship_A extends CommonWOE {
     @ChunkPreamble ( lastModified="2012/07/23", lastModifiedBy="Michael Schäfers" )
     public final void lastDeed(){
         lastDeed( Local.woeText );
-    }//lastDeed()
+    }//method()
     
     
     
@@ -162,4 +162,4 @@ abstract public class Ship_A extends CommonWOE {
     @ChunkPreamble ( lastModified="2013/05/23", lastModifiedBy="Michael Schäfers" )
     @Override public int hashCode(){ return super.hashCode(); }
     
-}//class Ship_A
+}//class

@@ -19,4 +19,4 @@ class EvTab_IDxTime {
     EvTab_IDxTime( final int id,  final long time ){ this.id=id; this.time=time; }
     EvTab_IDxTime(){ this( -1, -1 ); }
     
-}//class EvTab_IDxTime
+}//class

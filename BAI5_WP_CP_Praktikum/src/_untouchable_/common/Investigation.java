@@ -267,6 +267,6 @@ class Investigation {
             Global.av_syncWithGlobalMutex.unlock();
         }//try
         
-    }//investigate()
+    }//method()
 
-}//class Investigation
+}//class

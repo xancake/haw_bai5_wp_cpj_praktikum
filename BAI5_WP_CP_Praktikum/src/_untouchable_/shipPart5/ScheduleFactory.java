@@ -23,4 +23,4 @@ class ScheduleFactory extends CommonScheduleFactory {                           
     @Override
     public CommonSchedule createSchedule(){ return new Schedule(); }
 
-}//class ScheduleFactory
+}//class

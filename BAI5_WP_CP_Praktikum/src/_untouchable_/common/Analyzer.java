@@ -201,9 +201,10 @@ class Analyzer {
     
     
     // check number of smurfs
-    @ChunkPreamble ( lastModified="2013/05/27", lastModifiedBy="Michael Schäfers" )
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" )
     final boolean chkSmurfNo(){
-        final int expectedNumberOfSmurfs  =  (null!=Global.getData().rnos)  ?  Global.getData().rnos  :  Global.getData().wnos;
+        final Global global = Global.getData();
+        final int expectedNumberOfSmurfs  =  global.fnos;
         //
         // check number of generated smurf objects resp. internal smurf count
         if ( expectedNumberOfSmurfs != CommonSmurf.smurfCnt.get() ){
@@ -234,9 +235,10 @@ class Analyzer {
     
     
     // check number of WOEs
-    @ChunkPreamble ( lastModified="2013/05/28", lastModifiedBy="Michael Schäfers" )
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" )
     final boolean chkWoeNo(){
-        final int expectedNumberOfWOEs  =  (null!=Global.getData().rnow)  ?  Global.getData().rnow  :  Global.getData().wnow;
+        final Global global = Global.getData();
+        final int expectedNumberOfWOEs  =  global.fnow;
         //
         // check number of generated WOE objects resp. internal WOE count
         if ( expectedNumberOfWOEs != CommonWOE.woeCnt.get() ){
@@ -267,9 +269,10 @@ class Analyzer {
     
     
     // check number of locations
-    @ChunkPreamble ( lastModified="2013/05/27", lastModifiedBy="Michael Schäfers" )
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" )
     final boolean chkLocationNo(){
-        final int expectedNumberOfLocations  =  (null!=Global.getData().rnol)  ?  Global.getData().rnol  :  Global.getData().wnol;
+        final Global global = Global.getData();
+        final int expectedNumberOfLocations  =  global.fnol;
         //
         // check number of found user defined location IDs
         if ( locationIdValuesUnchecked ) throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if values of location IDs are valid" );
@@ -305,12 +308,13 @@ class Analyzer {
     
     
     // check smurf ID consistency - does same user defined smurf ID always belong to same internal smurf ID ?
-    @ChunkPreamble ( lastModified="2013/05/28", lastModifiedBy="Michael Schäfers" )
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" )
     final boolean chkSmurfIdConsistency(){
         if ( smurfIdValuesUnchecked )  throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if values of smurf IDs are valid" );
         if ( numberOfSmurfsUnchecked ) throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if number of found smurfs valid" );
         
-        final int expectedNumberOfSmurfs  =  (null!=Global.getData().rnos)  ?  Global.getData().rnos  :  Global.getData().wnos;
+        final Global global = Global.getData();
+        final int expectedNumberOfSmurfs  =  global.fnos;
         final EvTab_IDxTime[] smurfIdMap = new EvTab_IDxTime[expectedNumberOfSmurfs];
       //for ( int si=smurfIdMap.length; --si>=0; smurfIdMap[si] = null );
         
@@ -343,12 +347,13 @@ class Analyzer {
     
     
     // check WOE ID consistency - does same user defined WOE ID always belong to same internal WOE ID ?
-    @ChunkPreamble ( lastModified="2013/05/28", lastModifiedBy="Michael Schäfers" )
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" )
     final boolean chkWoeIdConsistency(){
         if ( woeIdValuesUnchecked )  throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if values of WOE IDs are valid" );
         if ( numberOfWOEsUnchecked ) throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if number of found WOEs valid" );
         
-        final int expectedNumberOfWOEs  =  (null!=Global.getData().rnow)  ?  Global.getData().rnow  :  Global.getData().wnow;
+        final Global global = Global.getData();
+        final int expectedNumberOfWOEs  =  global.fnow;
         final EvTab_IDxTime[] woeIdMap = new EvTab_IDxTime[expectedNumberOfWOEs];
       //for ( int wi=woeIdMap.length; --wi>=0; woeIdMap[wi] = null );
         
@@ -380,13 +385,14 @@ class Analyzer {
     }//chkWoeIdConsistency()
     
     
-    @ChunkPreamble ( lastModified="2013/05/28", lastModifiedBy="Michael Schäfers" )
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" )
     final boolean chkSmurfsLastDeed(){ // ??? check
         if ( smurfIdValuesUnchecked )      throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if values of smurf IDs are valid" );
         if ( numberOfSmurfsUnchecked )     throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if number of found smurfs valid" );
         if ( smurfIdConsistencyUnchecked ) throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if found smurf IDs are concistent" );
         
-        final int expectedNumberOfSmurfs  =  (null!=Global.getData().rnos)  ?  Global.getData().rnos  :  Global.getData().wnos;
+        final Global global = Global.getData();
+        final int expectedNumberOfSmurfs  =  global.fnos;
         final EvTab_IDxTime[] smurfTab = new EvTab_IDxTime[expectedNumberOfSmurfs];
       //for ( int si=smurfTab.length; --si>=0; smurfTab[si] = null );
         
@@ -412,13 +418,14 @@ class Analyzer {
     }//chkSmurfsLastDeed()
     
     
-    @ChunkPreamble ( lastModified="2013/05/28", lastModifiedBy="Michael Schäfers" )
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" )
     final boolean chkWOEsLastDeed(){
         if ( woeIdValuesUnchecked )      throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if values of WOE IDs are valid" );
         if ( numberOfWOEsUnchecked )     throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if number of found WOEs valid" );
         if ( woeIdConsistencyUnchecked ) throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if found WOE IDs are concistent" );
         
-        final int expectedNumberOfWOEs  =  (null!=Global.getData().rnow)  ?  Global.getData().rnow  :  Global.getData().wnow;
+        final Global global = Global.getData();
+        final int expectedNumberOfWOEs  =  global.fnow;
         final EvTab_IDxTime[] woeTab = new EvTab_IDxTime[expectedNumberOfWOEs];
       //for ( int si=woeTab.length; --si>=0; woeTab[si] = null );
         
@@ -447,13 +454,14 @@ class Analyzer {
     
     
     // check general activity cycle of smurf
-    @ChunkPreamble ( lastModified="2013/05/29", lastModifiedBy="Michael Schäfers" )
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" )
     final boolean chkSmurfActivityCycle(){
         if ( smurfIdValuesUnchecked )      throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if values of smurf IDs are valid" );
         if ( numberOfSmurfsUnchecked )     throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if number of found smurfs valid" );
         if ( smurfIdConsistencyUnchecked ) throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if found smurf IDs are concistent" );
         
-        final int expectedNumberOfSmurfs  =  (null!=Global.getData().rnos)  ?  Global.getData().rnos  :  Global.getData().wnos;
+        final Global global = Global.getData();
+        final int expectedNumberOfSmurfs  =  global.fnos;
         final Event[] eta = new Event[expectedNumberOfSmurfs];
       //for ( int idx=eta.length; --idx>=0; )  eta[idx] = null;
         
@@ -480,13 +488,14 @@ class Analyzer {
     
     
     // check general activity cycle of WOE
-    @ChunkPreamble ( lastModified="2013/05/29", lastModifiedBy="Michael Schäfers" )
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" )
     final boolean chkWoeActivityCycle(){
         if ( woeIdValuesUnchecked )      throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if values of WOE IDs are valid" );
         if ( numberOfWOEsUnchecked )     throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if number of found WOEs valid" );
         if ( woeIdConsistencyUnchecked ) throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if found WOE IDs are concistent" );
         
-        final int expectedNumberOfWOEs  =  (null!=Global.getData().rnow)  ?  Global.getData().rnow  :  Global.getData().wnow;
+        final Global global = Global.getData();
+        final int expectedNumberOfWOEs  =  global.fnow;
         final Event[] eta = new Event[expectedNumberOfWOEs];
       //for ( int idx=eta.length; --idx>=0; )  eta[idx] = null;
         
@@ -517,7 +526,7 @@ class Analyzer {
     //--------------------------------------------------------------------------
     
     
-    @ChunkPreamble ( lastModified="2013/05/29", lastModifiedBy="Michael Schäfers" )
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" )
     final boolean chkIfSmurfFollowsHisSchedule(){
         if ( smurfIdValuesUnchecked )      throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if values of smurf IDs are valid" );
         if ( numberOfSmurfsUnchecked )     throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if number of found smurfs valid" );
@@ -532,13 +541,15 @@ class Analyzer {
             int scheduleIndx;
         }//class Data
         
+        final Global global = Global.getData();
+        
         // for safety's sake
         for ( RawSmurf smurf : Global.av_smurfList ){                           // __???__<130529> check error message -> internal error ?
             if ( smurf.schedule == null )               throw new IllegalStateException( "ERROR: smurf (internal ID:" + smurf.internalSmurfID + ") has NO schedule" );
             if ( smurf.schedule.scheduleData == null )  throw new IllegalStateException( "ERROR: smurf (internal ID:" + smurf.internalSmurfID + ") has NO schedule data" );
         }//for
         
-        final int expectedNumberOfSmurfs  =  (null!=Global.getData().rnos)  ?  Global.getData().rnos  :  Global.getData().wnos;
+        final int expectedNumberOfSmurfs  =  global.fnos;
         final Data[] data = new Data[expectedNumberOfSmurfs];
         for ( int si=data.length; --si>=0; data[si] = new Data() );
         for ( RawSmurf smurf : Global.av_smurfList ){
@@ -587,7 +598,7 @@ class Analyzer {
     }//chkIfSmurfFollowsHisSchedule()
     
     
-    @ChunkPreamble ( lastModified="2013/05/29", lastModifiedBy="Michael Schäfers" )
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" )
     final boolean chkWoeRoute( final int[][] route ){
         if ( woeIdValuesUnchecked )       throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if values of WOE IDs are valid" );
         if ( numberOfWOEsUnchecked )      throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if number of found WOEs valid" );
@@ -595,7 +606,8 @@ class Analyzer {
         if ( woeActivityCycleUnchecked )  throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if WOE activity cycle valid" );
         if ( numberOfLocationsUnchecked ) throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if number of locations valid" );
         
-        final int expectedNumberOfWOEs  =  (null!=Global.getData().rnow)  ?  Global.getData().rnow  :  Global.getData().wnow;
+        final Global global = Global.getData();
+        final int expectedNumberOfWOEs  =  global.fnow;
         if ( route != null ){
             // there are some expected routes -> hence, they can be checked
             //
@@ -754,14 +766,15 @@ class Analyzer {
     //--------------------------------------------------------------------------
     
     
-    @ChunkPreamble ( lastModified="2013/05/29", lastModifiedBy="Michael Schäfers" )
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" )
     final boolean chkSmurfBehaviorDuringStopOver(){
         if ( smurfIdValuesUnchecked )      throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if values of smurf IDs are valid" );
         if ( numberOfSmurfsUnchecked )     throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if number of found smurfs valid" );
         if ( smurfIdConsistencyUnchecked ) throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if found smurf IDs are concistent" );
         if ( smurfActivityCycleUnchecked ) throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if smurf activity cycle valid" );
         
-        final int expectedNumberOfWOEs  =  (null!=Global.getData().rnow)  ?  Global.getData().rnow  :  Global.getData().wnow;
+        final Global global = Global.getData();
+        final int expectedNumberOfWOEs  =  global.fnow;
         for ( int isi=0; isi<expectedNumberOfWOEs; isi++ ){                     // Internal Smurf ID
             int lastPosition = -1;
             for ( Event ev : eventList ){
@@ -796,14 +809,15 @@ class Analyzer {
     }//chkSmurfBehaviorDuringStopOver()
     
     
-    @ChunkPreamble ( lastModified="2016/03/27", lastModifiedBy="Michael Schäfers" )
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" )
     final boolean chkWoeBehaviorDuringStopOver(){
         if ( woeIdValuesUnchecked )       throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if values of WOE IDs are valid" );
         if ( numberOfWOEsUnchecked )      throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if number of found WOEs valid" );
         if ( woeIdConsistencyUnchecked )  throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if found WOE IDs are concistent" );
         if ( woeActivityCycleUnchecked )  throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if WOE activity cycle valid" );
         
-        final int expectedNumberOfWOEs  =  (null!=Global.getData().rnow)  ?  Global.getData().rnow  :  Global.getData().wnow;
+        final Global global = Global.getData();
+        final int expectedNumberOfWOEs  =  global.fnow;
         for ( int iwi=0; iwi<expectedNumberOfWOEs; iwi++ ){                     // Internal WOE ID
             int currentRespLastReportedPosition = -1;                           // initialize as "somewhere" moving
             int lastReportedStopOverPosition    = -1;                           //
@@ -1101,7 +1115,7 @@ class Analyzer {
     }//class LocationInfo
     
     
-    @ChunkPreamble ( lastModified="2013/06/03", lastModifiedBy="Michael Schäfers" )
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" )
     final boolean chkGeneralBehavior(){
         if ( smurfIdValuesUnchecked )                throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if values of smurf IDs are valid" );
         if ( numberOfSmurfsUnchecked )               throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if number of found smurfs valid" );
@@ -1118,9 +1132,10 @@ class Analyzer {
         if ( numberOfLocationsUnchecked )            throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if number of locations valid" );
         
         
-        final int expectedNumberOfSmurfs     =  (null!=Global.getData().rnos)  ?  Global.getData().rnos  :  Global.getData().wnos;
-        final int expectedNumberOfWOEs       =  (null!=Global.getData().rnow)  ?  Global.getData().rnow  :  Global.getData().wnow;
-        final int expectedNumberOfLocations  =  (null!=Global.getData().rnol)  ?  Global.getData().rnol  :  Global.getData().wnol;
+        final Global global = Global.getData();
+        final int expectedNumberOfSmurfs     =  global.fnos;
+        final int expectedNumberOfWOEs       =  global.fnow;
+        final int expectedNumberOfLocations  =  global.fnol;
         
         SmurfInfo[] sia = new SmurfInfo[expectedNumberOfSmurfs];                // Smurf Info Array
         for ( int isi=expectedNumberOfSmurfs; --isi>=0; ){
@@ -1802,7 +1817,7 @@ class Analyzer {
     
     
     
-    @ChunkPreamble ( lastModified="2013/05/31", lastModifiedBy="Michael Schäfers" )
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" )
     final boolean chkLineBasedStuff( final int[][] route ){
         // chkCycleBasedStuff modified afterwards - check there for improvements
         if ( smurfIdValuesUnchecked )                throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if values of smurf IDs are valid" );
@@ -1834,11 +1849,12 @@ class Analyzer {
         }//EWoeInfo
         
         
-        final int expectedNumberOfSmurfs     =  (null!=Global.getData().rnos)    ?  Global.getData().rnos    :  Global.getData().wnos;
-        final int expectedNumberOfWOEs       =  (null!=Global.getData().rnow)    ?  Global.getData().rnow    :  Global.getData().wnow;
-        final int expectedNumberOfLocations  =  (null!=Global.getData().rnol)    ?  Global.getData().rnol    :  Global.getData().wnol;
-        final int maxNumberOfSmurfPerWOE     =  (null!=Global.getData().rmnspw)  ?  Global.getData().rmnspw  :  Global.getData().wmnspw;
-      //final int maxNumberOfWoePerLocation  =  (null!=Global.getData().rmnwpl)  ?  Global.getData().rmnwpl  :  Global.getData().wmnwpl;
+        final Global global = Global.getData();
+        final int expectedNumberOfSmurfs     =  global.fnos;
+        final int expectedNumberOfWOEs       =  global.fnow;
+        final int expectedNumberOfLocations  =  global.fnol;
+        final int maxNumberOfSmurfPerWOE     =  global.fmnspw;
+      //final int maxNumberOfWoePerLocation  =  global.fmnwpl;
         
         
         // compute traces ( reused "check for cycles" code from "chkWoeRoute()" )
@@ -1984,9 +2000,10 @@ class Analyzer {
                         }//for
                         if ( ! maybe.isEmpty() ){
                             System.err.printf(
-                                "ATTENTION: WOE:%d with %d passenger(s)   at position:%d (with %d remaining smurf(s) and going to next position:%d)   was NOT taken by %d smurf(s)   {@%s}\n",
+                                "ATTENTION: WOE:%d with %d passenger(s) and capacity of %d   at position:%d (with %d remaining smurf(s) and going to next position:%d)   was NOT taken by %d smurf(s)   {@%s}\n",
                                 ev.woeIdUser,
                                 wia[iwi].passengerCollection.size(),
+                                maxNumberOfSmurfPerWOE,
                                 ev.woePositionParameter,
                                 lia[ wia[iwi].posi ].waitingSmurfsCollection.size(),
                                 wia[iwi].todo.peek(),
@@ -2007,9 +2024,10 @@ class Analyzer {
                         }//if
                         if ( ! error.isEmpty() ){
                             System.err.printf(
-                                "\n\nERROR: WOE:%d with %d passenger(s)   at position:%d (with %d remaining smurf(s) and going to next position:%d)   was NOT taken by %d smurf(s)   {@%s}\n",
+                                "\n\nERROR: WOE:%d with %d passenger(s) and capacity of %d   at position:%d (with %d remaining smurf(s) and going to next position:%d)   was NOT taken by %d smurf(s)   {@%s}\n",
                                 ev.woeIdUser,
                                 wia[iwi].passengerCollection.size(),
+                                maxNumberOfSmurfPerWOE,
                                 ev.woePositionParameter,
                                 lia[ wia[iwi].posi ].waitingSmurfsCollection.size(),
                                 wia[iwi].todo.peek(),
@@ -2063,7 +2081,7 @@ class Analyzer {
     }//chkLineBasedStuff()
     
     
-    @ChunkPreamble ( lastModified="2013/06/07", lastModifiedBy="Michael Schäfers" )
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" )
     final boolean chkCycleBasedStuff( final int[][] route ){
         if ( smurfIdValuesUnchecked )                throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if values of smurf IDs are valid" );
         if ( numberOfSmurfsUnchecked )               throw new IllegalStateException( "INTERNAL CHECKING ERROR: still unchecked if number of found smurfs valid" );
@@ -2096,11 +2114,12 @@ class Analyzer {
         
         
         
-        final int expectedNumberOfSmurfs     =  (null!=Global.getData().rnos)    ?  Global.getData().rnos    :  Global.getData().wnos;
-        final int expectedNumberOfWOEs       =  (null!=Global.getData().rnow)    ?  Global.getData().rnow    :  Global.getData().wnow;
-        final int expectedNumberOfLocations  =  (null!=Global.getData().rnol)    ?  Global.getData().rnol    :  Global.getData().wnol;
-        final int maxNumberOfSmurfPerWOE     =  (null!=Global.getData().rmnspw)  ?  Global.getData().rmnspw  :  Global.getData().wmnspw;
-      //final int maxNumberOfWoePerLocation  =  (null!=Global.getData().rmnwpl)  ?  Global.getData().rmnwpl  :  Global.getData().wmnwpl;
+        final Global global = Global.getData();
+        final int expectedNumberOfSmurfs     =  global.fnos;
+        final int expectedNumberOfWOEs       =  global.fnow;
+        final int expectedNumberOfLocations  =  global.fnol;
+        final int maxNumberOfSmurfPerWOE     =  global.fmnspw;
+      //final int maxNumberOfWoePerLocation  =  global.fmnwpl;
         
         
         // compute traces ( reused "check for cycles" code from "chkWoeRoute()" )
@@ -2312,9 +2331,10 @@ class Analyzer {
                         }//for
                         if ( ! maybe.isEmpty() ){
                             System.err.printf(
-                                "ATTENTION: WOE:%d with %d passenger(s)   at position:%d (with %d remaining smurf(s)) heading to position:%d)   was NOT taken by %d smurf(s)   {@%s}\n",
+                                "ATTENTION: WOE:%d with %d passenger(s) and capacity of %d   at position:%d (with %d remaining smurf(s)) heading to position:%d)   was NOT taken by %d smurf(s)   {@%s}\n",
                                 ev.woeIdUser,
                                 wia[iwi].passengerCollection.size(),
+                                maxNumberOfSmurfPerWOE,
                                 ev.woePositionParameter,
                                 lia[ wia[iwi].posi ].waitingSmurfsCollection.size(),
                                 wia[iwi].half1st.peek(),
@@ -2335,9 +2355,10 @@ class Analyzer {
                         }//if
                         if ( ! error.isEmpty() ){
                             System.err.printf(
-                                "\n\nERROR: WOE:%d with %d:passenger(s)   at position:%d (with %d remaining smurf(s)) heading to position:%d)   was NOT taken by %d smurf(s)   {@%s}\n",
+                                "\n\nERROR: WOE:%d with %d:passenger(s) and capacity of %d   at position:%d (with %d remaining smurf(s)) heading to position:%d)   was NOT taken by %d smurf(s)   {@%s}\n",
                                 ev.woeIdUser,
                                 wia[iwi].passengerCollection.size(),
+                                maxNumberOfSmurfPerWOE,
                                 ev.woePositionParameter,
                                 lia[ wia[iwi].posi ].waitingSmurfsCollection.size(),
                                 wia[iwi].half1st.peek(),
@@ -2359,7 +2380,7 @@ class Analyzer {
                                 Tool.prettyTime( ev.time )
                             );
                             System.err.flush();
-                            if ( Global.getData().heavyTest ){
+                            if ( global.heavyTest ){
                                 System.err.printf( "-BREAK-BREAK-BREAK-BREAK-BREAK-BREAK-BREAK-BREAK-BREAK-BREAK-BREAK-BREAK-BREAK-BREAK-BREAK-BREAK-BREAK-BREAK-BREAK-BREAK-BREAK-BREAK-BREAK-\n" );    // _HERE_120519
                                 System.err.printf( "-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-\n" );    // _HERE_120519
                                 System.err.printf( "-#########################################################################################################################################-\n\n" );  // _HERE_120519
@@ -2398,7 +2419,7 @@ class Analyzer {
     }//chkCycleBasedStuff()
     
     
-    @ChunkPreamble ( lastModified="2012/07/23", lastModifiedBy="Michael Schäfers" )
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" )
     @SuppressWarnings("unused")
     final boolean chkLineRequestBasedStuff(){
         if ( true )  throw new IllegalStateException( "NOT supported yet" );
@@ -2414,9 +2435,9 @@ class Analyzer {
         }//WaitingWoeList
         
         
-        final int expectedNumberOfLocations  =  (null!=Global.getData().rnol)    ?  Global.getData().rnol    :  Global.getData().wnol;
-        final int maxNumberOfWoePerLocation  =  (null!=Global.getData().rmnwpl)  ?  Global.getData().rmnwpl  :  Global.getData().wmnwpl;
-        
+        final Global global = Global.getData();
+        final int expectedNumberOfLocations  =  global.fnol;
+        final int maxNumberOfWoePerLocation  =  global.fmnwpl;        
         
         WaitingWoeList[] la = new WaitingWoeList[expectedNumberOfLocations];         // Location Array
         for ( int i=la.length; --i>=0; ) la[i] = new WaitingWoeList();

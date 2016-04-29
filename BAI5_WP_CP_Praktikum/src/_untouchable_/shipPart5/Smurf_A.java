@@ -161,4 +161,4 @@ abstract public class Smurf_A extends CommonSmurf {
     @ChunkPreamble ( lastModified="2013/05/23", lastModifiedBy="Michael Schäfers" )
     @Override public int hashCode(){ return super.hashCode(); }
     
-}//class Smurf_A
+}//class

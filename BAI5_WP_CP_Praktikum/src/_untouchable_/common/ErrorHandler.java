@@ -48,7 +48,7 @@ class ErrorHandler {
             
         }//switch
         System.err.flush();
-    }//reportError()
+    }//method()
     
     
     
@@ -114,7 +114,7 @@ class ErrorHandler {
             
         }//switch
         System.err.flush();
-    }//reportError()
+    }//method()
     
     
     
@@ -234,7 +234,7 @@ class ErrorHandler {
             
         }//switch
         System.err.flush();
-    }//reportError()
+    }//method()
     
     
     
@@ -290,7 +290,7 @@ class ErrorHandler {
             
         }//switch
         System.err.flush();
-    }//reportError()            
+    }//method()            
     
     
     
@@ -347,7 +347,7 @@ class ErrorHandler {
             
         }//switch
         System.err.flush();            
-    }//reportError()
+    }//method()
     
     
     
@@ -385,7 +385,7 @@ class ErrorHandler {
             
         }//switch
         System.err.flush();
-    }//reportError()
+    }//method()
     
     
     
@@ -448,6 +448,6 @@ class ErrorHandler {
             
         }//switch
         System.err.flush();
-    }//reportError()
+    }//method()
     
-}//class ErrorHandler
+}//class

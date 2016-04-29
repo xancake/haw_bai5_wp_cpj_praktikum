@@ -1,10 +1,10 @@
 package _untouchable_.common;
 
 
-import java.lang.annotation.*;
+//import java.lang.annotation.*;
 
 
-@Documented
+//@Documented
 public @interface ClassPreamble {
     String author() default "Michael Schäfers";
     String organization() default "Dept.Informatik; HAW Hamburg";
@@ -14,4 +14,4 @@ public @interface ClassPreamble {
     String lastModifiedBy() default "N/A";
     String reviewed() default "N/A";                                            // yyyy/mm/dd
     String[] reviewers() default { "N/A" };
-}//ClassPreamble
+}//annotation

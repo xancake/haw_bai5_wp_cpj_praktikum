@@ -196,7 +196,7 @@ public abstract class TestAndEnvironment_A extends CommonTestAndEnvironment {
         final Integer requestedNumberOfLandings,
         final Integer requestedMaximumNumberOfSmurfsPerShip,
         final Integer requestedMaximumNumberOfShipsPerLanding
-    );//doTest()
+    );//method()
     
     //JavaDOC                                                                   // adapt _HERE_
     /**
@@ -218,7 +218,7 @@ public abstract class TestAndEnvironment_A extends CommonTestAndEnvironment {
         final Integer mnowpl
     ){
         doTest( nos, now, nol, mnospw, mnowpl );
-    }//doTheTest()
+    }//method()
     
     
     //JavaDOC                                                                   // adapt _HERE_
@@ -227,7 +227,7 @@ public abstract class TestAndEnvironment_A extends CommonTestAndEnvironment {
      * setzt interne Variablen (die Sie <u>nicht</u> interessieren m&uuml;ssen)
      * und macht einige zus&auml;tzliche Ausgaben.
      */
-    @ChunkPreamble ( lastModified="2013/05/17", lastModifiedBy="Michael Schäfers" )
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" )
     public final void letThereBeLife(){
         super.letThereBeLife(
             //------------------------------------------------------------------
@@ -265,8 +265,10 @@ public abstract class TestAndEnvironment_A extends CommonTestAndEnvironment {
             // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
             CircleShipStyle,
             //------------------------------------------------------------------
-            SHIP
+            SHIP,
+            //------------------------------------------------------------------
+            true
         );  // just prime numbers (to be used as test values): 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127
-    };//letThereBeLife()
+    };//method()
     
-}//TestAndEnvironment_A
+}//class

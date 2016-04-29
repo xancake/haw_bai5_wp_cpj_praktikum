@@ -38,7 +38,7 @@ public class Schedule extends CommonSchedule {
                 + locHere
             );
         }//if
-    }//Schedule()
+    }//constructor()
     
     
     
@@ -46,4 +46,4 @@ public class Schedule extends CommonSchedule {
     @Override
     public SSI next(){ return (SSI)( super.next() ); }
     
-}//class Schedule
+}//class

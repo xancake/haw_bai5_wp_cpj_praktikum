@@ -23,6 +23,6 @@ class SSIFactory extends CommonSSIFactory {                                     
     @Override
     public CommonSSI createSSI( final Integer position,  final Integer dwell ){
         return new SSI( position, dwell );
-    }//createSSI()
+    }//method()
 
-}//class SSIFactory
+}//class

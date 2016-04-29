@@ -76,14 +76,14 @@ enum EventType {                                                                
     }//method()
     
     
-    @ChunkPreamble ( lastModified="2013/05/17", lastModifiedBy="Michael Schäfers" )
+    @ChunkPreamble ( lastModified="2016/04/26", lastModifiedBy="Michael Schäfers" )
     boolean isWoeActivityValid( final EventType lastWoeActivity ){
         if ( lastWoeActivity == null ){
-            // handle 1st action                                                __???__<130516>
+            // handle 1st action
             //
             final WoeType woeType = Global.getData().woeType;
-            return (this==W3AAP && woeType == WoeType.BUS)                      // 1st bus event
-                || (this==W3AAP && woeType == WoeType.SHIP);                    // 1st ship event
+            return (this==W3AAP && woeType == WoeType.BUS)                      // 1st bus event    synchronous start was requested - W3AAP makes most sense
+                || (this==W3AAP && woeType == WoeType.SHIP);                    // 1st ship event   synchronous start was requested - W3AAP makes most sense
         }//if
         switch ( lastWoeActivity ){                                             // handle following actions
             case W1MO1: return this==W2MO2;

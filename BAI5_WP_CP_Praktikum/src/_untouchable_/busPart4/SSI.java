@@ -41,6 +41,6 @@ public final class SSI extends CommonSSI {
                 + locHere
             );
         }//if
-    }//SSI()
+    }//constructor()
     
-}//class SSI
+}//class

@@ -21,15 +21,15 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Global {
     
     @ChunkPreamble ( lastModified="2012/07/26", lastModifiedBy="Michael Schäfers" )
-    public static synchronized Global createSingleInstanceOfGlobal( final Integer[] par, final WoeType woeType ){
+    public static synchronized Global createSingleInstanceOfGlobal( final Integer[] par,  final WoeType woeType,  final boolean grantWishes ){
         if (instance == null) {
-            instance = new Global( par, woeType );
+            instance = new Global( par, woeType, grantWishes );
             instance.testExecutionLoopCount = new AtomicLong( 1 );
         }else{
             throw new IllegalStateException( "Only single configuration allowed and supported" );
         }//if
         return instance;
-    }//createSingleInstanceOfGlobal
+    }//method()
     
     @ChunkPreamble ( lastModified="2012/07/26", lastModifiedBy="Michael Schäfers" )
     private static Global instance = null;
@@ -41,8 +41,8 @@ public class Global {
     
     
     
-    @ChunkPreamble ( lastModified="2012/07/26", lastModifiedBy="Michael Schäfers" )
-    private Global( final Integer[] par, WoeType woeType ){
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" )
+    private Global( final Integer[] par,  final WoeType woeType,  final boolean grantWishes ){
         
         // check for crazy "stuff" or missusage of environment
         final String here = new Object(){}.getClass().getPackage().getName();
@@ -72,6 +72,13 @@ public class Global {
         rnol                = par[ 6];    // Requested Number Of Locations   ( bus stop, level,    landing, .. )
         rmnspw              = par[ 8]!=null  ?  par[ 8]  :  Integer.MAX_VALUE;    // Maximum Number of Smurfs Per Woe    - null::= "don't care" <=> MAX_VALUE
         rmnwpl              = par[10]!=null  ?  par[10]  :  Integer.MAX_VALUE;    // Maximum Number of Woe Per Location  - null::= "don't care" <=> MAX_VALUE
+        
+        
+        fnos   =  grantWishes  ?  wnos    :  rnos;                              // <<<<<===== FINAL DECISION  160425
+        fnow   =  grantWishes  ?  wnow    :  rnow;                              // <<<<<===== FINAL DECISION  160425
+        fnol   =  grantWishes  ?  wnol    :  rnol;                              // <<<<<===== FINAL DECISION  160425
+        fmnspw =  grantWishes  ?  wmnspw  :  rmnspw;                            // <<<<<===== FINAL DECISION  160425
+        fmnwpl =  grantWishes  ?  wmnwpl  :  rmnwpl;                            // <<<<<===== FINAL DECISION  160425
         
         
         minNumberOfStops    = par[11];
@@ -171,7 +178,7 @@ public class Global {
             throw new IllegalStateException( "Faulty configuration for unit" );
         }//if
         
-    }//Global
+    }//constructor()
     
     
     
@@ -193,6 +200,14 @@ public class Global {
     //
     @ChunkPreamble ( lastModified="2012/07/26", lastModifiedBy="Michael Schäfers" ) public final Integer rmnspw;                // Requested Maximum Number of Smurfs Per Woe
     @ChunkPreamble ( lastModified="2012/07/26", lastModifiedBy="Michael Schäfers" ) public final Integer rmnwpl;                // Requested Maximum Number of Woe Perl Location
+    
+    
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" ) public final Integer fnos;                  // Final Number Of Smurfs
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" ) public final Integer fnow;                  // Final Number Of Whatsoever  ( bus,      elevator, ship,    .. )
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" ) public final Integer fnol;                  // Final Number Of Locations   ( bus stop, level,    landing, .. )
+    //
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" ) public final Integer fmnspw;                // Final Maximum Number of Smurfs Per Woe
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" ) public final Integer fmnwpl;                // Final Maximum Number of Woe Perl Location
     
     
     @ChunkPreamble ( lastModified="2012/07/26", lastModifiedBy="Michael Schäfers" ) public final Integer minNumberOfStops;      //

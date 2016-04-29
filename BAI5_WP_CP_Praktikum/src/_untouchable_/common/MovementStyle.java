@@ -16,4 +16,4 @@ public enum MovementStyle {
     CircleShipStyle,
     RequestElevatorStyle
 
-}//enum MovementStyle
+}//enum

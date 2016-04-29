@@ -98,7 +98,9 @@ abstract public class Bus_A extends CommonWOE {
     /**
      * Mit dem Aufruf von {@link #startFrom(int)} definiert ein Bus den Zeitpunkt
      * zu dem dieser Bus (von der als Parameter &uuml;bergebenen Bushaltestelle) abf&auml;hrt
-     * und seine T&uuml;ren schlie&szlig;t.
+     * und seine T&uuml;ren schlie&szlig;t. Dies hat so schnell wie m&ouml;glich
+     * nach Ablauf der Haltezeit zu passieren. D.h. nach {@link #takeTimeForStopoverAt(int)}
+     * darf der Bus <strong><u>nicht</u></strong> erst noch einmal zum Einsteigen auffordern.
      * @param location bestimmt die Haltestelle von welcher der Bus gerade abf&auml;hrt.
      */
     @ChunkPreamble ( lastModified="2012/07/23", lastModifiedBy="Michael Schäfers" )
@@ -122,10 +124,13 @@ abstract public class Bus_A extends CommonWOE {
     /**
      * Mit dem Aufruf von {@link #takeTimeForStopoverAt(int)} wird die Zeit modelliert,
      * die der Bus an der jeweiligen Haltestelle (mit ge&ouml;ffneten T&uuml;ren) verweilt.
+     * Nach dem Verstreichen der Zeit f&auml;hrt der Bus so schnell wie m&ouml;glich ab.
+     * Der Bus darf nach dem Ablaufen der Zeit <strong><u>nicht</u></strong> erst noch
+     * einmal zum Einsteigen auffordern.
      * @param location bestimmt die aktuelle Haltestelle an der der Bus gerade h&auml;lt.
      * @throws InterruptedException wenn Methode beim Warten unterbrochen wird.
      */
-    @ChunkPreamble ( lastModified="2012/07/23", lastModifiedBy="Michael Schäfers" )
+    @ChunkPreamble ( lastModified="2016/04/27", lastModifiedBy="Michael Schäfers" )
     public final void takeTimeForStopoverAt( final int location ) throws InterruptedException { // adapt _HERE_
         takeTimeForStopover( location );
     }//method()

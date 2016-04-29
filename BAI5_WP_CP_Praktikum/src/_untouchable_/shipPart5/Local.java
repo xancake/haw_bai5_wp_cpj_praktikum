@@ -24,4 +24,4 @@ class Local {
     @ChunkPreamble ( lastModified="2012/07/19", lastModifiedBy="Michael Schäfers" ) static final String  cmnPath = "shipPart";              // adapt _HERE_
     @ChunkPreamble ( lastModified="2012/07/19", lastModifiedBy="Michael Schäfers" ) static final String  reqPath = "solution4SE";           // adapt _HERE_
     @ChunkPreamble ( lastModified="2012/07/19", lastModifiedBy="Michael Schäfers" ) static final boolean partSeparationRequired = false;    // adapt _HERE_
-}//class Local
+}//class

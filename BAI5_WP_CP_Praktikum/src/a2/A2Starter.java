@@ -2,6 +2,7 @@ package a2;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import _untouchable_.busPart4.TestAndEnvironment_A;
 
 public class A2Starter extends TestAndEnvironment_A {
@@ -65,11 +66,11 @@ public class A2Starter extends TestAndEnvironment_A {
 
 	@Override
 	public Integer getWantedNumberOfSmurfs() {
-		return 1000;
+		return 10;
 	}
 
 	@Override
-	public Integer getWantedNumberOfBuses() {
+	public Integer getWantedNumberOfBusses() {
 		return 2;
 	}
 
@@ -84,7 +85,7 @@ public class A2Starter extends TestAndEnvironment_A {
 	}
 
 	@Override
-	public Integer getWantedMaximumNumberOfBusesPerBusStop() {
+	public Integer getWantedMaximumNumberOfBussesPerBusStop() {
 		return Integer.MAX_VALUE;
 	}
 

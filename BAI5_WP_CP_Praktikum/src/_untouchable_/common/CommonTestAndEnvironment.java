@@ -37,7 +37,7 @@ public abstract class CommonTestAndEnvironment {
             System.err.flush();
             throw new IllegalStateException( "unexpected package path -> " + here );
         }//if
-    }//CommonTestAndEnvironment_A()
+    }//contructor()
     
     
     
@@ -95,7 +95,7 @@ public abstract class CommonTestAndEnvironment {
        final Integer rnol,
        final Integer rmnspw,
        final Integer rmnwpl
-    );//doTheTest()
+    );//method()
     
     
     
@@ -109,10 +109,11 @@ public abstract class CommonTestAndEnvironment {
      * @param movementStyle for internal usage ;-)
      * @param woeType for internal usage ;-)
      */
-    @ChunkPreamble ( lastModified="2013/06/27", lastModifiedBy="Michael Schäfers" )
-    public final void letThereBeLife( final Integer[] par,  final int[][] woeRoutes,  final MovementStyle movementStyle,  final WoeType woeType ){
-        Global.createSingleInstanceOfGlobal( par, woeType );
+    @ChunkPreamble ( lastModified="2016/04/25", lastModifiedBy="Michael Schäfers" )
+    public final void letThereBeLife( final Integer[] par,  final int[][] woeRoutes,  final MovementStyle movementStyle,  final WoeType woeType,  final boolean grantWishes ){
         
+        Global.createSingleInstanceOfGlobal( par, woeType, grantWishes );
+        final Global global = Global.getData();
         
         
         //
@@ -123,45 +124,45 @@ public abstract class CommonTestAndEnvironment {
         boolean requirementsForCheckOk = true;
         
         // wanted number of smurfs ok ?
-        if ( null!=Global.getData().rnos  &&  ! Global.getData().wnos.equals(Global.getData().rnos) ){                                          // constants only exists once
+        if ( null!=global.rnos  &&  ! global.wnos.equals(global.rnos) ){                                          // constants only exists once
             requirementsForCheckOk = false;
-            System.err.println( String.format( "Illegal test configuration : (wanted #smurf =) %d != %d (= requested #smurf)", Global.getData().wnos, Global.getData().rnos ) );
+            System.err.println( String.format( "Illegal test configuration : (wanted #smurf =) %d != %d (= requested #smurf)", global.wnos, global.rnos ) );
         }//if
         //
         // wanted number of WOE ok ?
-        if ( null!=Global.getData().rnow  &&  ! Global.getData().wnow.equals(Global.getData().rnow) ){                                          // constants only exists once
+        if ( null!=global.rnow  &&  ! global.wnow.equals(global.rnow) ){                                          // constants only exists once
             requirementsForCheckOk = false;
-            System.err.println( String.format( "Illegal test configuration : (wanted #woe =) %d != %d (= requested #woe)", Global.getData().wnow, Global.getData().rnow ) );
+            System.err.println( String.format( "Illegal test configuration : (wanted #woe =) %d != %d (= requested #woe)", global.wnow, global.rnow ) );
         }//if
         //
         // wanted number of locations/stops ok ?
-        if ( null!=Global.getData().rnol  &&  ! Global.getData().wnol.equals(Global.getData().rnol) ){                                          // constants only exists once
+        if ( null!=global.rnol  &&  ! global.wnol.equals(global.rnol) ){                                          // constants only exists once
             requirementsForCheckOk = false;
-            System.err.println( String.format( "Illegal test configuration : (wanted #stop =) %d != %d (= requested #stop)", Global.getData().wnol, Global.getData().rnol ) );
+            System.err.println( String.format( "Illegal test configuration : (wanted #stop =) %d != %d (= requested #stop)", global.wnol, global.rnol ) );
         }//if
         //
-        if ( null!=Global.getData().rmnspw  &&  ! Global.getData().wmnspw.equals(Global.getData().rmnspw) ){                                    // constants only exists once
+        if ( null!=global.rmnspw  &&  ! global.wmnspw.equals(global.rmnspw) ){                                    // constants only exists once
             requirementsForCheckOk = false;
-            System.err.println( String.format( "Illegal test configuration : (wanted s/w =) %d != %d (= requested s/w)", Global.getData().wmnspw, Global.getData().rmnspw ) );
+            System.err.println( String.format( "Illegal test configuration : (wanted s/w =) %d != %d (= requested s/w)", global.wmnspw, global.rmnspw ) );
         }//if
         //
-        if ( null!=Global.getData().rmnwpl  &&  ! Global.getData().wmnwpl.equals(Global.getData().rmnwpl) ){                                    // constants only exists once
+        if ( null!=global.rmnwpl  &&  ! global.wmnwpl.equals(global.rmnwpl) ){                                    // constants only exists once
             requirementsForCheckOk = false;
-            System.err.println( String.format( "Illegal test configuration : (wanted w/l =) %d != %d (= requested w/l)", Global.getData().wmnwpl, Global.getData().rmnwpl ) );
+            System.err.println( String.format( "Illegal test configuration : (wanted w/l =) %d != %d (= requested w/l)", global.wmnwpl, global.rmnwpl ) );
         }//if
         
         // is there a reference route for each WOE ?
-        if ( woeRoutes.length != Global.getData().wnow ){
+        if ( woeRoutes.length != global.wnow ){
             requirementsForCheckOk = false;
-            System.err.println( String.format( "Illegal test configuration : (#woe =) %d != %d (= #routes)", woeRoutes.length, Global.getData().wnow ) );
+            System.err.println( String.format( "Illegal test configuration : (#woe =) %d != %d (= #routes)", woeRoutes.length, global.wnow ) );
         }//if
         //
         // is the number of stops (in trace cycle) for each WOE route ok ?
         int traceCycleLength = Integer.MIN_VALUE;
         if ( movementStyle == MovementStyle.LineBusStyle ){
-            traceCycleLength = 2*Global.getData().wnol - 2;                     // both "ends" are listed only once
+            traceCycleLength = 2*global.wnol - 2;                     // both "ends" are listed only once
         }else{
-            traceCycleLength = Global.getData().wnol;
+            traceCycleLength = global.wnol;
         }//if
         for ( int i=woeRoutes.length; --i>=0; ){
             if ( woeRoutes[i].length != traceCycleLength ){
@@ -169,22 +170,8 @@ public abstract class CommonTestAndEnvironment {
                 System.err.println( String.format( "Illegal test configuration : (route[%d] =) %d != %d (= #stops)", i, woeRoutes[i].length, traceCycleLength ) );
             }//if
         }//for
-        
-        
-        
         //
-        //
-        // select actual/requested values
-        //
-        
-        final boolean forceValues = false;                                                              // <<<<<===== FINAL DECISION
-        final Integer rnos   =  forceValues  ?  Global.getData().rnos    :  Global.getData().wnos;      // <<<<<===== FINAL DECISION
-        final Integer rnow   =  forceValues  ?  Global.getData().rnow    :  Global.getData().wnow;      // <<<<<===== FINAL DECISION
-        final Integer rnol   =  forceValues  ?  Global.getData().rnol    :  Global.getData().wnol;      // <<<<<===== FINAL DECISION
-        final Integer rmnspw =  forceValues  ?  Global.getData().rmnspw  :  Global.getData().wmnspw;    // <<<<<===== FINAL DECISION
-        final Integer rmnwpl =  forceValues  ?  Global.getData().rmnwpl  :  Global.getData().wmnwpl;    // <<<<<===== FINAL DECISION
-        if ( forceValues ) requirementsForCheckOk = true;                                               // <<<<<===== FINAL DECISION
-        
+        if ( grantWishes ) requirementsForCheckOk = true;
         
         
         final long requiredNumberOfSuccessfullTestExecutions = 1;               // currently NOT supported
@@ -201,7 +188,8 @@ public abstract class CommonTestAndEnvironment {
             }catch( InterruptedException ex ){ ex.printStackTrace(); }
             System.out.printf( "_____ACTION_________________________________________\n\n\n" );
             
-            doTheTest( rnos, rnow, rnol, rmnspw, rmnwpl );
+            
+            doTheTest( global.fnos, global.fnow, global.fnol, global.fmnspw, global.fmnwpl );           // 160425
             
             try{
                 TimeUnit.SECONDS.sleep( 1 );
@@ -210,7 +198,6 @@ public abstract class CommonTestAndEnvironment {
             
             
             
-            requirementsForCheckOk = true;
             // _HERE_ : Start of Verification --------------------------------------
             if ( requirementsForCheckOk ){
                 Investigation.investigate( woeRoutes,  movementStyle );
@@ -220,7 +207,7 @@ public abstract class CommonTestAndEnvironment {
             
             
             
-            if ( requiredNumberOfSuccessfullTestExecutions <= Global.getData().testExecutionLoopCount.getAndIncrement() ) break magicTestLoop;
+            if ( requiredNumberOfSuccessfullTestExecutions <= global.testExecutionLoopCount.getAndIncrement() ) break magicTestLoop;
             assert false : "currently NOT supported";
             
             System.err.flush();
@@ -228,22 +215,22 @@ public abstract class CommonTestAndEnvironment {
             System.out.printf( "\n\n\n" );
             System.out.printf( "################################################################################\n" );
             System.out.printf( "###\n" );
-            System.out.printf( "### run# %d\n",  Global.getData().testExecutionLoopCount.get() );
+            System.out.printf( "### run# %d\n",  global.testExecutionLoopCount.get() );
             System.out.printf( "###\n\n" );
             
-        }// magicTestLoop
-    }//letThereBeLife()
+        }//while
+    }//method()
     //
     //
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     //
     //
-    @ChunkPreamble ( lastModified="2013/05/30", lastModifiedBy="Michael Schäfers" )
+    @ChunkPreamble ( lastModified="2016/04/27", lastModifiedBy="Michael Schäfers" )
     private final void startEverything( final String woeText, final String locText ){
         System.out.printf( "Informationen zum Environment:\n" );
         System.out.printf( "==============================\n" );
         System.out.printf( "\n" );
-        System.out.printf( "Version:  0.96 alpha (for WP CPJ SS16)\n" );
+        System.out.printf( "Version:  0.98 alpha (for WP CPJ SS16)\n" );
         System.out.printf( "\n" );
         System.out.printf( "Java:     %s bzw. %s\n",       System.getProperty( "java.specification.version" ), System.getProperty( "java.version" ) );
         System.out.printf( "O.-P.:    %s\n",               new Object().getClass().getPackage() );
@@ -262,7 +249,7 @@ public abstract class CommonTestAndEnvironment {
         System.out.printf( "####################################################\n" );
         System.out.printf( "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv\n" );
         System.out.flush();
-    }//startEverything()
+    }//method()
     //
     //
     @ChunkPreamble ( lastModified="2012/07/19", lastModifiedBy="Michael Schäfers" )
@@ -273,6 +260,6 @@ public abstract class CommonTestAndEnvironment {
         System.out.printf( "All smurfs have settled their schedule (hopefully;-)\n" );
         System.out.printf( "THE END after %s\n",  Tool.prettyTime( Tool.nanoElapsedTime() ) );
         System.out.flush();
-    }//announceTheEnd()
+    }//method()
     
-}//class CommonTestAndEnvironment
+}//class

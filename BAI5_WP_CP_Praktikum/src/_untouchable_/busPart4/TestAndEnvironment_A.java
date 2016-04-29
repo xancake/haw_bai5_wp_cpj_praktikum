@@ -33,14 +33,14 @@ public abstract class TestAndEnvironment_A extends CommonTestAndEnvironment {
     // abstract Integer getWantedNumberOfSmurfs();  wird in in super class CommonTestAndEnvironment eingefordert
     
     /**
-     * {@link #getWantedNumberOfBuses()} liefert die Anzahl der Busse,
+     * {@link #getWantedNumberOfBusses()} liefert die Anzahl der Busse,
      * die Sie sich f&uuml;r Ihren Testlauf &quot;w&uuml;nschen&quot;.
      * Die Anzahl der Busse, die (beim Test) bei der Abnahme verwendet wird,
      * kann hiervon abweichen.
      * @return die von Ihnen &quot;gew&uuml;nschte&quot; Anzahl der Busse f&uuml;r Ihren Testlauf.
      */
     @ChunkPreamble ( lastModified="2013/05/18", lastModifiedBy="Michael Schäfers" )
-    public abstract Integer getWantedNumberOfBuses();
+    public abstract Integer getWantedNumberOfBusses();
     
     /**
      * {@link #getWantedNumberOfBusStops()} liefert die Anzahl der Bushaltestellen,
@@ -63,14 +63,14 @@ public abstract class TestAndEnvironment_A extends CommonTestAndEnvironment {
     public abstract Integer getWantedMaximumNumberOfSmurfsPerBus();
     
     /**
-     * {@link #getWantedMaximumNumberOfBusesPerBusStop()} liefert die von Ihnen &quot;gew&uuml;nschte&quot;
+     * {@link #getWantedMaximumNumberOfBussesPerBusStop()} liefert die von Ihnen &quot;gew&uuml;nschte&quot;
      * maximale Anzahl von Bussen, die sich gleichzeitig in einer Bushaltestelle stehen d&uuml;rfen.
      * Die entsprechende Anzahl, die (beim Test) bei der Abnahme verwendet wird, kann hiervon abweichen.
      * @return die (f&uuml;r Ihren Testlauf) von Ihnen &quot;gew&uuml;nschte&quot; maximale Anzahl von Bussen,
      *         die gleichzeitig an einer Bushaltestelle stehen d&uuml;rfen.
      */
     @ChunkPreamble ( lastModified="2013/05/18", lastModifiedBy="Michael Schäfers" )
-    public abstract Integer getWantedMaximumNumberOfBusesPerBusStop();
+    public abstract Integer getWantedMaximumNumberOfBussesPerBusStop();
     
     
     
@@ -84,10 +84,10 @@ public abstract class TestAndEnvironment_A extends CommonTestAndEnvironment {
      * &nbsp; &nbsp &hellip;   <br />
      * &nbsp; &nbsp doTest(    <br />
      * &nbsp; &nbsp &nbsp; &nbsp {@link #getWantedNumberOfSmurfs()},                <br />
-     * &nbsp; &nbsp &nbsp; &nbsp {@link #getWantedNumberOfBuses()},                 <br />
+     * &nbsp; &nbsp &nbsp; &nbsp {@link #getWantedNumberOfBusses()},                <br />
      * &nbsp; &nbsp &nbsp; &nbsp {@link #getWantedNumberOfBusStops()},              <br />
      * &nbsp; &nbsp &nbsp; &nbsp {@link #getWantedMaximumNumberOfSmurfsPerBus()},   <br />
-     * &nbsp; &nbsp &nbsp; &nbsp {@link #getWantedMaximumNumberOfBusesPerBusStop()} <br />
+     * &nbsp; &nbsp &nbsp; &nbsp {@link #getWantedMaximumNumberOfBussesPerBusStop()}<br />
      * &nbsp; &nbsp );         <br />
      * &nbsp; &nbsp &hellip;   <br />
      * }                       <br />
@@ -107,10 +107,10 @@ public abstract class TestAndEnvironment_A extends CommonTestAndEnvironment {
      * &nbsp; &nbsp &hellip;   <br />
      * &nbsp; &nbsp doTest(    <br />
      * &nbsp; &nbsp &nbsp; &nbsp requestedValueForNumberOfSmurfs,                   <br />
-     * &nbsp; &nbsp &nbsp; &nbsp requestedValueForNumberOfBuses,                    <br />
+     * &nbsp; &nbsp &nbsp; &nbsp requestedValueForNumberOfBusses,                   <br />
      * &nbsp; &nbsp &nbsp; &nbsp requestedValueForNumberOfBusStops,                 <br />
      * &nbsp; &nbsp &nbsp; &nbsp requestedValueForMaximumNumberOfSmurfsPerBus,      <br />
-     * &nbsp; &nbsp &nbsp; &nbsp requestedValueForMaximumNumberOfBusesPerBusStop    <br />
+     * &nbsp; &nbsp &nbsp; &nbsp requestedValueForMaximumNumberOfBussesPerBusStop   <br />
      * &nbsp; &nbsp );         <br />
      * &nbsp; &nbsp &hellip;   <br />
      * }                       <br />
@@ -118,20 +118,20 @@ public abstract class TestAndEnvironment_A extends CommonTestAndEnvironment {
      * denkbar.<br />
      * <br />
      * @param requestedNumberOfSmurfs bestimmt die Anzahl der Schl&uuml;mpfe f&uuml;r den zugeh&ouml;rigen Testlauf.
-     * @param requestedNumberOfBuses bestimmt die Anzahl der Schiffe f&uuml;r den zugeh&ouml;rigen Testlauf.
+     * @param requestedNumberOfBusses bestimmt die Anzahl der Schiffe f&uuml;r den zugeh&ouml;rigen Testlauf.
      * @param requestedNumberOfBusStops bestimmt die Anzahl der Anlegestellen f&uuml;r den zugeh&ouml;rigen Testlauf.
      * @param requestedMaximumNumberOfSmurfsPerBus bestimmt die maximale Anzahl von Schl&uuml;pfen,
      *                                             die sich gleichzeitig in einem Bus aufhalten d&uuml;fen.
-     * @param requestedMaximumNumberOfBusesPerBusStop bestimmt die maximale Anzahl von Bussen,
-     *                                                die gleichzeitig an einer Haltestelle halten d&uuml;rfen.
+     * @param requestedMaximumNumberOfBussesPerBusStop bestimmt die maximale Anzahl von Bussen,
+     *                                                 die gleichzeitig an einer Haltestelle halten d&uuml;rfen.
      */
-    @ChunkPreamble ( lastModified="2013/05/17", lastModifiedBy="Michael Schäfers" )
+    @ChunkPreamble ( lastModified="2016/04/27", lastModifiedBy="Michael Schäfers" )
     public abstract void doTest(
         final Integer requestedNumberOfSmurfs,
-        final Integer requestedNumberOfBuses,
+        final Integer requestedNumberOfBusses,
         final Integer requestedNumberOfBusSTops,
         final Integer requestedMaximumNumberOfSmurfsPerSBus,
-        final Integer requestedMaximumNumberOfBusesPerBusSTop
+        final Integer requestedMaximumNumberOfBussesPerBusSTop
     );//method()
     
     /**
@@ -161,32 +161,32 @@ public abstract class TestAndEnvironment_A extends CommonTestAndEnvironment {
      * setzt interne Variablen (die Sie <u>nicht</u> interessieren m&uuml;ssen)
      * und macht einige zus&auml;tzliche Ausgaben.
      */
-    @ChunkPreamble ( lastModified="2013/05/17", lastModifiedBy="Michael Schäfers" )
+    @ChunkPreamble ( lastModified="2016/04/27", lastModifiedBy="Michael Schäfers" )
     public final void letThereBeLife(){
         super.letThereBeLife(
             //------------------------------------------------------------------
             new Integer[]{
             
-                4,                                                  // part Id                                                              ;  _4         _4         _4         _4         _4         _4
+                4,                                                  // part Id
                 
-                getWantedNumberOfSmurfs(),                  null,   // number of smurfs                                                     ;  100        100        100        1000       2500       10000
-                getWantedNumberOfBuses(),                   2,      // number of WOE / busses                                               ;  _2         _2         _2         _2         _2         _2
-                getWantedNumberOfBusStops(),                5,      // number of WOE stops / bus stops                                      ;  _5         _5         _5         _5         _5         _5
+                getWantedNumberOfSmurfs(),                  null,   // number of smurfs
+                getWantedNumberOfBusses(),                  2,      // number of WOE / busses
+                getWantedNumberOfBusStops(),                5,      // number of WOE stops / bus stops
                 
-                getWantedMaximumNumberOfSmurfsPerBus(),     17,     // max number of smurfs per WOE   ;   null <=> wildcard                 ;  _7         _7         _7         _7         59        _59
-                getWantedMaximumNumberOfBusesPerBusStop(),  null,   // max number of WOE per location ;   null <=> wildcard                 ;  null       null       null       null       null      null
+                getWantedMaximumNumberOfSmurfsPerBus(),     17,     // max number of smurfs per WOE   ;   null <=> wildcard
+                getWantedMaximumNumberOfBussesPerBusStop(), null,   // max number of WOE per location ;   null <=> wildcard
                 
-                7,  23,                                             // min/max number of stops                                              ;  _7, 23     _7, 23     _7, 23     _7, 23     _7, 23     _7, 23
+                7,  23,                                             // min/max number of stops
                 
-                0,  31,                                             // min/max smurf arrival time (in units)                                ;  _0, 31     _0, 31     _0, 31     _0, 31     _0, 31    _0, 31
-                3,  37,                                             // min/max smurf dwell (time for doing stuff in time units)             ;  _3, 37     _3, 37     _3, 37     _3, 37     _3, 37    _3, 37
+                0,  31,                                             // min/max smurf arrival time (in units)
+                3,  37,                                             // min/max smurf dwell (time for doing stuff in time units)
                 
-                13, 29,                                             // min/max bus ride time (in units)                                     ;  13, 29     13, 29     13, 29     13, 29     13, 29    13, 29
-                11, 19,                                             // min/max bus dwell (boarding time in units)                           ;  11, 19     11, 19     11, 19     11, 19     11, 19    11, 19
+                13, 29,                                             // min/max bus ride time (in units)
+                11, 19,                                             // min/max bus dwell (boarding time in units)
                 
-                10                                                   // (single) time unit size in milli seconds                             ;  10         50         10         10         10        10
+                10                                                  // (single) time unit size in milli seconds
                 
-            },                                                                                                                             //  ~510[s]    ~120[s]    ~925[s]    ~440[s]   ~1_750[s]
+            },
             // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
             new int[][]{
                 { 0,1,2,3,4,3,2,1 },                                // 1st bus route
@@ -195,7 +195,9 @@ public abstract class TestAndEnvironment_A extends CommonTestAndEnvironment {
             //------------------------------------------------------------------
             LineBusStyle,
             //------------------------------------------------------------------
-            BUS
+            BUS,
+            //------------------------------------------------------------------
+            true
         );  // just prime numbers (to be used as test values): 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127
     };//method()
 
