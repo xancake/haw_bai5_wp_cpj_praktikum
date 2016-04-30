@@ -5,10 +5,9 @@ import java.util.List;
 
 import _untouchable_.busPart4.TestAndEnvironment_A;
 
-public class A2Starter extends TestAndEnvironment_A {
+public class A2MonitorStarter extends TestAndEnvironment_A {
 	public static void main(String[] args) {
-		A2Starter starter = new A2Starter();
-		starter.letThereBeLife();
+		new A2MonitorStarter().letThereBeLife();
 	}
 
 	@Override
