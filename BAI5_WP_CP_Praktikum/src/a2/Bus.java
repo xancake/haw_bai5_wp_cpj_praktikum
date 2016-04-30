@@ -58,7 +58,7 @@ public class Bus extends Bus_A implements Runnable {
 				if(nextStopLocation == _world.getFirstStop() || nextStopLocation == _world.getLastStop()) {
 					_direction *= -1; // Richtung umdrehen, wenn wir uns am Ende befinden
 				}
-
+				
 				synchronized(_passengers) {
 					_currentStop.abfahren(this);
 					_currentStop = null;
@@ -91,13 +91,16 @@ public class Bus extends Bus_A implements Runnable {
 	public boolean tryEnterBus(Smurf smurf) {
 		synchronized(_passengers) {
 			try {
-				while(!hasFreeSeats()) {
+				// Solange der Bus an der Haltestelle ist und keine freien Plätze hat warten
+				while(_currentStop != null && !hasFreeSeats()) {
 					_passengers.wait();
-					// Bus ist bereits abgefahren!
-					if(_currentStop == null) {
-						return false;
-					}
 				}
+				
+				// Bus ist bereits abgefahren!
+				if(_currentStop == null) {
+					return false;
+				}
+				
 				_passengers.add(smurf);
 				smurf.enter(this);
 				return true;
