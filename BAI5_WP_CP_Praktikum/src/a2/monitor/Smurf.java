@@ -1,4 +1,4 @@
-package a2;
+package a2.monitor;
 
 import java.util.Objects;
 import _untouchable_.busPart4.SSI;
@@ -35,7 +35,6 @@ public class Smurf extends Smurf_A implements Runnable {
 						if(currentBus!=null && !currentBus.tryEnterBus(this)) {
 							currentBus = null;
 						}
-//						currentBus = currentBusStop.inBusSteigen(this, ssi.getPlanedPosition());
 					}
 					
 					// Solange wir nicht am Ziel sind, müssen wir mit dem Bus fahren

@@ -1,4 +1,4 @@
-package a2;
+package a2.monitor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,27 +53,6 @@ public class BusStop {
 			}
 			
 			// Kein Bus fährt nach targetLocation
-			return null;
-		}
-	}
-	
-	public Bus inBusSteigen(Smurf smurf, int targetLocation) throws InterruptedException {
-		synchronized(_bussesAtBusStop) {
-			while(_bussesAtBusStop.isEmpty()) {
-				_bussesAtBusStop.wait();
-			}
-			
-			// Bus auswählen und einsteigen wenn Platz frei
-			for (Bus bus : _bussesAtBusStop) {
-				int direction = _location > targetLocation ? -1 : 1;
-				if (bus.getDirection() == direction) {
-					if(bus.tryEnterBus(smurf)) {
-						return bus;
-					}
-				}
-			}
-			
-			// Konnte bei keinem Bus einsteigen
 			return null;
 		}
 	}

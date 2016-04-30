@@ -1,4 +1,4 @@
-package a2;
+package a2.monitor;
 
 public class Debug {
 	public static final boolean DEBUG_BUS   = true;

@@ -1,4 +1,4 @@
-package a2;
+package a2.monitor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,7 +123,7 @@ public class Bus extends Bus_A implements Runnable {
 		return _passengers.size() < _seats;
 	}
 	
-	public int getDirection(){
+	public int getDirection() {
 		return _direction;
 	}
 	
