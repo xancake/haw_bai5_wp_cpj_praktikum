@@ -96,7 +96,7 @@ public class Bus extends Bus_A implements Runnable {
 			_passengerLock.lock();
 			
 			// Solange der Bus an der Haltestelle ist und keine freien Plätze hat warten
-			while(_currentStop != null && !hasFreeSeats()) {
+			while(_currentStop != null && _passengers.availablePermits() <= 0) {
 				_passengerCondition.await();
 			}
 			
@@ -127,10 +127,6 @@ public class Bus extends Bus_A implements Runnable {
 		} finally {
 			_passengerLock.unlock();
 		}
-	}
-	
-	public boolean hasFreeSeats() {
-		return _passengers.availablePermits() > 0;
 	}
 	
 	public void awaitArrivalAt(BusStop stop) throws InterruptedException {

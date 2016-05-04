@@ -34,10 +34,7 @@ public class Smurf extends Smurf_A implements Runnable {
 					Bus currentBus = null;
 					do {
 						currentBus = currentBusStop.ermittleBusNach(ssi.getPlanedPosition());
-						if(currentBus!=null && !currentBus.tryEnterBus(this)) {
-							currentBus = null;
-						}
-					} while(currentBus == null);
+					} while(currentBus==null || !currentBus.tryEnterBus(this));
 					
 					// Im Bus sein und warten, bis die Zielhaltestelle erreicht wurde
 					beThere(currentBus);

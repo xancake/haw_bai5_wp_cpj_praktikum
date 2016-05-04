@@ -62,7 +62,7 @@ public class BusStop {
 			// Einen Bus ermitteln, der nach targetLocation fährt
 			int direction = _location > targetLocation ? -1 : 1;
 			for (Bus bus : _bussesAtBusStop) {
-				if (bus.getDirection() == direction && bus.hasFreeSeats()) {
+				if (bus.getDirection() == direction) {
 					return bus;
 				}
 			}
