@@ -8,31 +8,38 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class BusStop {
 	private Lock _lock = new ReentrantLock();
-	private Condition _busArrives = _lock.newCondition();
-	private Condition _busLeaves = _lock.newCondition();
+	private Condition _busToTheLeftArrives = _lock.newCondition();
+	private Condition _busToTheLeftLeaves = _lock.newCondition();
+	private Condition _busToTheLeftPassengers = _lock.newCondition();
+	private Condition _busToTheRightArrives = _lock.newCondition();
+	private Condition _busToTheRightLeaves = _lock.newCondition();
+	private Condition _busToTheRightPassengers = _lock.newCondition();
 	
 	private int _location;
 	private int _maxBusses;
-	private List<Bus> _bussesAtBusStop;
+	private List<Bus> _bussesToTheLeft;
+	private List<Bus> _bussesToTheRight;
 	
 	public BusStop(int location, int maxBusses) {
 		_location = location;
 		_maxBusses = maxBusses;
-		_bussesAtBusStop = new ArrayList<Bus>();
+		_bussesToTheLeft = new ArrayList<Bus>();
+		_bussesToTheRight = new ArrayList<Bus>();
 	}
 	
 	public void anfahren(Bus bus) throws InterruptedException {
 		try {
 			_lock.lock();
 			
-			while(_bussesAtBusStop.size() >= _maxBusses) {
-				_busLeaves.await();
+			List<Bus> busList = getBusList(bus.getDirection());
+			while(busList.size() >= _maxBusses) {
+				getLeaveCondition(bus.getDirection()).await();
 			}
 			
 			bus.stopAt(_location);
-			_bussesAtBusStop.add(bus);
+			busList.add(bus);
 			
-			_busArrives.signalAll();
+			getArriveCondition(bus.getDirection()).signalAll();
 		} finally {
 			_lock.unlock();
 		}
@@ -42,33 +49,44 @@ public class BusStop {
 		try {
 			_lock.lock();
 			
-			_bussesAtBusStop.remove(bus);
+			getBusList(bus.getDirection()).remove(bus);
 			bus.startFrom(_location);
 			
-			_busLeaves.signal();
+			getLeaveCondition(bus.getDirection()).signal();
 		} finally {
 			_lock.unlock();
 		}
 	}
 	
-	public Bus ermittleBusNach(int targetLocation) throws InterruptedException {
+	public Bus betreteBusNach(Smurf smurf, int targetLocation) throws InterruptedException {
+		int direction = _location > targetLocation ? -1 : 1;
+		try {
+			_lock.lock();
+
+			List<Bus> busList = getBusList(direction);
+			while(true) {
+				while(busList.isEmpty()) {
+					getArriveCondition(direction).await();
+				}
+				
+				for(Bus bus : busList) {
+					if(bus.tryEnterBus(smurf)) {
+						return bus;
+					}
+				}
+				getPassengersCondition(direction).await();
+			}
+		} finally {
+			_lock.unlock();
+		}
+	}
+	
+	public void verlasseBus(Smurf smurf, Bus bus) throws InterruptedException {
 		try {
 			_lock.lock();
 			
-			while(_bussesAtBusStop.isEmpty()) {
-				_busArrives.await();
-			}
-			
-			// Einen Bus ermitteln, der nach targetLocation fährt
-			int direction = _location > targetLocation ? -1 : 1;
-			for (Bus bus : _bussesAtBusStop) {
-				if (bus.getDirection() == direction) {
-					return bus;
-				}
-			}
-			
-			// Kein Bus fährt nach targetLocation
-			return null;
+			bus.leaveBus(smurf);
+			getPassengersCondition(bus.getDirection()).signal();
 		} finally {
 			_lock.unlock();
 		}
@@ -76,5 +94,21 @@ public class BusStop {
 	
 	public int getLocation() {
 		return _location;
+	}
+	
+	private List<Bus> getBusList(int direction) {
+		return direction>0 ? _bussesToTheRight : _bussesToTheLeft;
+	}
+	
+	private Condition getLeaveCondition(int direction) {
+		return direction>0 ? _busToTheRightLeaves : _busToTheLeftLeaves;
+	}
+	
+	private Condition getArriveCondition(int direction) {
+		return direction>0 ? _busToTheRightArrives : _busToTheLeftArrives;
+	}
+	
+	private Condition getPassengersCondition(int direction) {
+		return direction>0 ? _busToTheRightPassengers : _busToTheLeftPassengers;
 	}
 }

@@ -30,21 +30,17 @@ public class Smurf extends Smurf_A implements Runnable {
 
 				// Müssen noch hinfahren
 				if(currentBusStop.getLocation() != targetBusStop.getLocation()) {
-					// Solange in der Schleife verweilen, bis wir einem Bus beigetreten sind, der in unsere Richtung fährt
-					Bus currentBus = null;
-					do {
-						currentBus = currentBusStop.ermittleBusNach(ssi.getPlanedPosition());
-					} while(currentBus==null || !currentBus.tryEnterBus(this));
+					Bus currentBus = currentBusStop.betreteBusNach(this, targetBusStop.getLocation());
 					
 					// Im Bus sein und warten, bis die Zielhaltestelle erreicht wurde
 					beThere(currentBus);
 					currentBus.awaitArrivalAt(targetBusStop);
+					currentBusStop = targetBusStop;
 					
-					currentBus.leaveBus(this);
+					currentBusStop.verlasseBus(this, currentBus);
 				}
 				
 				// Sind an der Zielhaltestelle
-				currentBusStop = targetBusStop;
 				takeTimeForDoingStuffAtCurrentPosition(currentBusStop.getLocation(), ssi);
 			}
 		} catch(InterruptedException e) {

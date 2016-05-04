@@ -60,7 +60,7 @@ public class A2LocksStarter extends TestAndEnvironment_A {
 
 	@Override
 	public Integer getWantedNumberOfSmurfs() {
-		return 1000;
+		return 100;
 	}
 
 	@Override

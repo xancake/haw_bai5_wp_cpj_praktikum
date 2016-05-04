@@ -3,7 +3,6 @@ package a2.locks;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -16,8 +15,7 @@ public class Bus extends Bus_A implements Runnable {
 	private Map<Integer, Condition> _stopConditions;
 	
 	private Lock _passengerLock = new ReentrantLock();
-	private Condition _passengerCondition = _passengerLock.newCondition();
-	private Semaphore _passengers;
+	private int _freeSeats;
 	
 	private SmurfWorld _world;
 	private BusStop _currentStop;
@@ -39,7 +37,7 @@ public class Bus extends Bus_A implements Runnable {
 		for(int i=0; i<_world.getBusStopCount(); i++) {
 			_stopConditions.put(i, _lock.newCondition());
 		}
-		_passengers = new Semaphore(seats);
+		_freeSeats = seats;
 		_startBusStop = startBusStop;
 		_direction = direction;
 		_id = id;
@@ -65,21 +63,14 @@ public class Bus extends Bus_A implements Runnable {
 				}
 				
 				takeTimeForStopoverAt(_currentStop.getLocation());
+
+				_currentStop.abfahren(this);
 				
 				int nextStopLocation = _currentStop.getLocation() + _direction;
+				_currentStop = null;
 				nextStop = _world.getBusStop(nextStopLocation);
 				if(nextStopLocation == _world.getFirstStop() || nextStopLocation == _world.getLastStop()) {
 					_direction *= -1; // Richtung umdrehen, wenn wir uns am Ende befinden
-				}
-				
-				try {
-					_passengerLock.lock();
-					_currentStop.abfahren(this);
-					_currentStop = null;
-					// Schlümpfe die einsteigen wollen kicken
-					_passengerCondition.signalAll();
-				} finally {
-					_passengerLock.unlock();
 				}
 				
 				takeTimeForBusRideTo(nextStop.getLocation());
@@ -95,22 +86,12 @@ public class Bus extends Bus_A implements Runnable {
 		try {
 			_passengerLock.lock();
 			
-			// Solange der Bus an der Haltestelle ist und keine freien Plätze hat warten
-			while(_currentStop != null && _passengers.availablePermits() <= 0) {
-				_passengerCondition.await();
+			boolean hasFreeSeats = _freeSeats > 0;
+			if(hasFreeSeats) {
+				_freeSeats--;
+				smurf.enter(this);
 			}
-			
-			// Bus ist bereits abgefahren!
-			if(_currentStop == null) {
-				return false;
-			}
-			
-			_passengers.acquire();
-			smurf.enter(this);
-			
-			return true;
-		} catch(InterruptedException e) {
-			return false;
+			return hasFreeSeats;
 		} finally {
 			_passengerLock.unlock();
 		}
@@ -120,10 +101,8 @@ public class Bus extends Bus_A implements Runnable {
 		try {
 			_passengerLock.lock();
 			
-			_passengers.release();
+			_freeSeats++;
 			smurf.leave(this);
-			
-			_passengerCondition.signal();
 		} finally {
 			_passengerLock.unlock();
 		}
