@@ -19,14 +19,16 @@ public class Ship extends Ship_A implements Runnable {
 	private int _id;
 	private final int _sitzplaetze;
 	private Queue<Landing> _fahrplan;
+	private final Richtung _richtung;
 	private List<Smurf> _passagiere;
 	
 	private boolean _running;
 	
-	public Ship(int id, int sitzplaetze, Queue<Landing> fahrplan) {
+	public Ship(int id, int sitzplaetze, Queue<Landing> fahrplan, Richtung richtung) {
 		_id = id;
 		_sitzplaetze = sitzplaetze;
 		_fahrplan = Objects.requireNonNull(fahrplan);
+		_richtung = Objects.requireNonNull(richtung);
 		_passagiere = new LinkedList<>();
 		_landingConditions = new HashMap<>();
 		for(Landing landing : _fahrplan) {
@@ -77,12 +79,17 @@ public class Ship extends Ship_A implements Runnable {
 		_running = false;
 	}
 	
-	public boolean tryBetreten(Smurf smurf) {
+	public boolean tryBetreten(Smurf schlumpf) {
 		 try {
 			 _lock.lock();
-			 if(!_passagiere.contains(smurf) && _passagiere.size() < _sitzplaetze) {
-				 _passagiere.add(smurf);
-				 smurf.enter(this);
+			 
+			 if(_passagiere.contains(schlumpf)) {
+				 throw new IllegalStateException("Schlumpf '" + schlumpf + "' will den Bus '" + this + "' betreten, ist aber bereits darin!");
+			 }
+			 
+			 if(_passagiere.size() < _sitzplaetze) {
+				 _passagiere.add(schlumpf);
+				 schlumpf.enter(this);
 				 return true;
 			 } else {
 				 return false;
@@ -95,10 +102,13 @@ public class Ship extends Ship_A implements Runnable {
 	public void verlassen(Smurf smurf) {
 		 try {
 			 _lock.lock();
-			 if(_passagiere.contains(smurf)) {
-				 _passagiere.remove(smurf);
-				 smurf.leave(this);
+			 
+			 if(!_passagiere.contains(smurf)) {
+				 throw new IllegalStateException("Schlumpf '" + smurf + "' will den Bus '" + this + "' verlassen, ist aber garnicht darin!");
 			 }
+			 
+			 _passagiere.remove(smurf);
+			 smurf.leave(this);
 		 } finally {
 			 _lock.unlock();
 		 }
@@ -111,6 +121,10 @@ public class Ship extends Ship_A implements Runnable {
 		} finally {
 			_lock.unlock();
 		}
+	}
+	
+	public Richtung getRichtung() {
+		return _richtung;
 	}
 	
 	@Override

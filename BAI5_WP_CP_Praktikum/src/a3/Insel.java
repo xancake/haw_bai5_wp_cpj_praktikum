@@ -10,7 +10,7 @@ public class Insel {
 	public Insel(int landings, int anzahlSchiffeProHaltestelle) {
 		_landings = new ArrayList<>();
 		for(int i=0; i<landings; i++) {
-			_landings.add(new Landing(i, anzahlSchiffeProHaltestelle));
+			_landings.add(new Landing(i, anzahlSchiffeProHaltestelle, landings));
 		}
 	}
 	

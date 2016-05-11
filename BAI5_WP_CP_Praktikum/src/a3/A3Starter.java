@@ -26,7 +26,7 @@ public class A3Starter extends TestAndEnvironment_A {
 		
 		List<Ship> schiffe = new ArrayList<>();
 		for(int i=0; i<requestedNumberOfShips; i++) {
-			Ship schiff = new Ship(i, requestedNumberOfShips, new LinkedList<>(haltestellen));
+			Ship schiff = new Ship(i, requestedNumberOfShips, new LinkedList<>(haltestellen), (i%2==0 ? Richtung.IM_UHRZEIGERSINN : Richtung.GEGEN_UHRZEIGERSINN));
 			schiffe.add(schiff);
 			new Thread(schiff).start();
 			
@@ -41,16 +41,16 @@ public class A3Starter extends TestAndEnvironment_A {
 		for(int i=0; i<requestedNumberOfSmurfs; i++) {
 			Smurf schlumpf = new Smurf(i, insel);
 			Thread schlumpfThread = new Thread(schlumpf);
-			schlumpfThreads.addAll(schlumpfThreads);
+			schlumpfThreads.add(schlumpfThread);
 			schlumpfThread.start();
 			try {
 				Smurf.waitUntilNextArrival();
 			} catch(InterruptedException cannotHappen) {}
 		}
 		
-		schlumpfThreads.forEach(thread -> {
+		schlumpfThreads.forEach(schlumpfThread -> {
 			try {
-				thread.join();
+				schlumpfThread.join();
 			} catch(InterruptedException cannotHappen) {}
 		});
 		
