@@ -30,27 +30,21 @@ public class A2LocksStarter extends TestAndEnvironment_A {
 			busse.add(bus);
 		}
 		
-		List<Smurf> schluempfe = new ArrayList<Smurf>();
 		List<Thread> schlumpfThreads = new ArrayList<Thread>();
 		for(int i=0; i<requestedNumberOfSmurfs; i++) {
 			Smurf schlumpf = new Smurf(world, i);
 			Thread schlumpfThread = new Thread(schlumpf);
-			schlumpfThread.start();
-			schluempfe.add(schlumpf);
 			schlumpfThreads.add(schlumpfThread);
+			schlumpfThread.start();
 			try {
 				Smurf.waitUntilNextArrival();
-			} catch(InterruptedException e) {
-				// Kann von außen nicht interrupted werden
-			}
+			} catch(InterruptedException cannotHappen) {}
 		}
 		
 		for(Thread schlumpfThread : schlumpfThreads) {
 			try {
 				schlumpfThread.join();
-			} catch(InterruptedException e) {
-				// Kann von außen nicht interrupted werden
-			}
+			} catch(InterruptedException cannotHappen) {}
 		}
 		
 		for(Bus bus : busse) {

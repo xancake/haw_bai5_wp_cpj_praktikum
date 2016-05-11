@@ -74,6 +74,7 @@ public class BusStop {
 						return bus;
 					}
 				}
+				
 				getPassengersCondition(direction).await();
 			}
 		} finally {
@@ -81,11 +82,12 @@ public class BusStop {
 		}
 	}
 	
-	public void verlasseBus(Smurf smurf, Bus bus) throws InterruptedException {
+	public void verlasseBus(Smurf smurf, Bus bus) {
 		try {
 			_lock.lock();
 			
 			bus.leaveBus(smurf);
+			
 			getPassengersCondition(bus.getDirection()).signal();
 		} finally {
 			_lock.unlock();
