@@ -60,6 +60,7 @@ public class Ship extends Ship_A implements Runnable {
 				try {
 					_lock.lock();
 					currentLanding.abfahren(this);
+					currentLanding = null;
 				} finally {
 					_lock.unlock();
 				}

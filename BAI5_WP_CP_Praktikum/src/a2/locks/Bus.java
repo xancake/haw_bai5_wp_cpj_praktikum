@@ -3,6 +3,7 @@ package a2.locks;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Stack;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -13,66 +14,67 @@ import _untouchable_.busPart4.Bus_A;
 
 public class Bus extends Bus_A implements Runnable {
 	private Lock _lock = new ReentrantLock();
-	private Map<Integer, Condition> _stopConditions;
+	private Map<BusStop, Condition> _stopConditions;
 	
 	private Lock _passengerLock = new ReentrantLock();
-	private int _freeSeats;
-	
-	private SmurfWorld _world;
-	private BusStop _currentStop;
-	private int _startBusStop;
-	private Direction _direction;
 	
 	private int _id;
+	private int _freeSeats;
+	private Stack<BusStop> _fahrplan;
+	private Stack<BusStop> _fahrplanZurueck;
+	private Direction _direction;
+	
 	private boolean _run;
 	
-	public Bus(SmurfWorld world, int startBusStop, Direction direction, int id, int seats) {
-		_world = Objects.requireNonNull(world);
-		if((startBusStop == _world.getFirstStop() && Direction.LEFT.equals(direction))
-				|| (startBusStop == _world.getLastStop() && Direction.RIGHT.equals(direction))) {
-			throw new IllegalArgumentException("Bus darf nicht in Richtung " + direction + " fahren wenn er an " + startBusStop + " startet");
-		}
+	public Bus(int id, int seats, Stack<BusStop> fahrplan, Direction direction) {
 		if(seats < 1) {
 			throw new IllegalArgumentException("Im Bus muss mindestens ein Sitzplatz vorhanden sein");
 		}
-		_stopConditions = new HashMap<Integer, Condition>();
-		for(int i=0; i<_world.getBusStopCount(); i++) {
-			_stopConditions.put(i, _lock.newCondition());
-		}
-		_freeSeats = seats;
-		_startBusStop = startBusStop;
-		_direction = direction;
+		
 		_id = id;
+		_freeSeats = seats;
+		_fahrplan = Objects.requireNonNull(fahrplan);
+		_fahrplanZurueck = new Stack<BusStop>();
+		_direction = direction;
+		
+		_stopConditions = new HashMap<BusStop, Condition>();
+		for(BusStop stop : _fahrplan) {
+			_stopConditions.put(stop, _lock.newCondition());
+		}
 	}
 	
 	@Override
 	public void run() {
 		_run = true;
 		try {
-			_currentStop = null;
-			BusStop nextStop = _world.getBusStop(_startBusStop);
+			
+			BusStop currentStop = null;
+			BusStop nextStop = _fahrplan.pop();
 			
 			while(_run) {
-				_currentStop = nextStop;
-				_currentStop.anfahren(this);
+				_fahrplanZurueck.add(nextStop);
+				currentStop = nextStop;
+				currentStop.anfahren(this);
 				
 				// Passagiere benachrichtigen, dass eine Haltestelle erreicht wurde
 				try {
 					_lock.lock();
-					_stopConditions.get(_currentStop.getLocation()).signalAll();
+					_stopConditions.get(currentStop).signalAll();
 				} finally {
 					_lock.unlock();
 				}
 				
-				takeTimeForStopoverAt(_currentStop.getLocation());
+				takeTimeForStopoverAt(currentStop.getLocation());
 
-				_currentStop.abfahren(this);
-				
-				nextStop = _direction.getNextBusStop(_world, _currentStop);
-				_currentStop = null;
+				currentStop.abfahren(this);
+				currentStop = null;
+				nextStop = _fahrplan.pop();
 				
 				// Richtung umdrehen, wenn wir uns am Ende befinden
-				if(nextStop.getLocation() == _world.getFirstStop() || nextStop.getLocation() == _world.getLastStop()) {
+				if(_fahrplan.isEmpty()) {
+					Stack<BusStop> temp = _fahrplan;
+					_fahrplan = _fahrplanZurueck;
+					_fahrplanZurueck = temp;
 					_direction = _direction.swap();
 				}
 				
@@ -114,7 +116,7 @@ public class Bus extends Bus_A implements Runnable {
 	public void awaitArrivalAt(BusStop stop) throws InterruptedException {
 		try {
 			_lock.lock();
-			_stopConditions.get(stop.getLocation()).await();
+			_stopConditions.get(stop).await();
 		} finally {
 			_lock.unlock();
 		}

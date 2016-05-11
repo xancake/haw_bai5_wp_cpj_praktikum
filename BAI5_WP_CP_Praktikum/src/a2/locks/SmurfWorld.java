@@ -1,32 +1,36 @@
 package a2.locks;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
 public class SmurfWorld {
-	private List<BusStop> _busStops;
+	private List<BusStop> _fahrplanNachRechts;
+	private List<BusStop> _fahrplanNachLinks;
 	
 	public SmurfWorld(int busStopCount, int maxBussesPerStop) {
-		_busStops = new ArrayList<BusStop>();
+		_fahrplanNachRechts = new LinkedList<BusStop>();
+		_fahrplanNachLinks = new LinkedList<BusStop>();
 		for(int i=0; i<busStopCount; i++) {
 			BusStop stop = new BusStop(i, maxBussesPerStop);
-			_busStops.add(stop);
+			_fahrplanNachRechts.add(stop);
+			_fahrplanNachLinks.add(0, stop);
 		}
 	}
 	
+	public Stack<BusStop> getFahrplanNachRechts() {
+		Stack<BusStop> fahrplan = new Stack<BusStop>();
+		fahrplan.addAll(_fahrplanNachLinks);
+		return fahrplan;
+	}
+	
+	public Stack<BusStop> getFahrplanNachLinks() {
+		Stack<BusStop> fahrplan = new Stack<BusStop>();
+		fahrplan.addAll(_fahrplanNachRechts);
+		return fahrplan;
+	}
+	
 	public BusStop getBusStop(int location) {
-		return _busStops.get(location);
-	}
-	
-	public int getBusStopCount() {
-		return _busStops.size();
-	}
-	
-	public int getFirstStop() {
-		return 0;
-	}
-	
-	public int getLastStop() {
-		return getBusStopCount()-1;
+		return _fahrplanNachRechts.get(location);
 	}
 }

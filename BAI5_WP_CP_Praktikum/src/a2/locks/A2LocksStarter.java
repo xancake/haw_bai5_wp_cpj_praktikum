@@ -2,9 +2,10 @@ package a2.locks;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
-import a2.Direction;
 import _untouchable_.busPart4.TestAndEnvironment_A;
+import a2.Direction;
 
 public class A2LocksStarter extends TestAndEnvironment_A {
 	public static void main(String[] args) {
@@ -24,9 +25,9 @@ public class A2LocksStarter extends TestAndEnvironment_A {
 		
 		List<Bus> busse = new ArrayList<Bus>(requestedNumberOfBuses);
 		for(int i=0; i<requestedNumberOfBuses; i++) {
-			int startBusStop = (i%2==0 ? world.getFirstStop() : world.getLastStop());
-			Direction direction = world.getLastStop() == startBusStop ? Direction.LEFT : Direction.RIGHT;
-			Bus bus = new Bus(world, startBusStop, direction, i, requestedMaximumNumberOfSmurfsPerSBus);
+			Stack<BusStop> fahrplan = (i%2==0) ? world.getFahrplanNachRechts() : world.getFahrplanNachLinks();
+			Direction direction = i%2==0 ? Direction.RIGHT : Direction.LEFT;
+			Bus bus = new Bus(i, requestedMaximumNumberOfSmurfsPerSBus, fahrplan, direction);
 			busse.add(bus);
 			new Thread(bus).start();
 		}
