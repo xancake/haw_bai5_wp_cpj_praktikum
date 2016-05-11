@@ -8,6 +8,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import a2.Debug;
+import a2.Direction;
 import _untouchable_.busPart4.Bus_A;
 
 public class Bus extends Bus_A implements Runnable {
@@ -20,15 +21,16 @@ public class Bus extends Bus_A implements Runnable {
 	private SmurfWorld _world;
 	private BusStop _currentStop;
 	private int _startBusStop;
-	private int _direction;
+	private Direction _direction;
 	
 	private int _id;
 	private boolean _run;
 	
-	public Bus(SmurfWorld world, int startBusStop, int direction, int id, int seats) {
+	public Bus(SmurfWorld world, int startBusStop, Direction direction, int id, int seats) {
 		_world = Objects.requireNonNull(world);
-		if((startBusStop == _world.getFirstStop() && direction < 0) || (startBusStop == _world.getLastStop() && direction > 0)) {
-			throw new IllegalArgumentException("Bus darf nicht in Richtung " + direction + " wenn er an " + startBusStop + " startet");
+		if((startBusStop == _world.getFirstStop() && Direction.LEFT.equals(direction))
+				|| (startBusStop == _world.getLastStop() && Direction.RIGHT.equals(direction))) {
+			throw new IllegalArgumentException("Bus darf nicht in Richtung " + direction + " fahren wenn er an " + startBusStop + " startet");
 		}
 		if(seats < 1) {
 			throw new IllegalArgumentException("Im Bus muss mindestens ein Sitzplatz vorhanden sein");
@@ -66,11 +68,12 @@ public class Bus extends Bus_A implements Runnable {
 
 				_currentStop.abfahren(this);
 				
-				int nextStopLocation = _currentStop.getLocation() + _direction;
+				nextStop = _direction.getNextBusStop(_world, _currentStop);
 				_currentStop = null;
-				nextStop = _world.getBusStop(nextStopLocation);
-				if(nextStopLocation == _world.getFirstStop() || nextStopLocation == _world.getLastStop()) {
-					_direction *= -1; // Richtung umdrehen, wenn wir uns am Ende befinden
+				
+				// Richtung umdrehen, wenn wir uns am Ende befinden
+				if(nextStop.getLocation() == _world.getFirstStop() || nextStop.getLocation() == _world.getLastStop()) {
+					_direction = _direction.swap();
 				}
 				
 				takeTimeForBusRideTo(nextStop.getLocation());
@@ -117,7 +120,7 @@ public class Bus extends Bus_A implements Runnable {
 		}
 	}
 	
-	public int getDirection() {
+	public Direction getDirection() {
 		return _direction;
 	}
 	

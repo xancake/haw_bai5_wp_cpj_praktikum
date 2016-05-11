@@ -6,6 +6,8 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import a2.Direction;
+
 public class BusStop {
 	private Lock _lock = new ReentrantLock();
 	private Condition _busToTheLeftArrives = _lock.newCondition();
@@ -59,7 +61,7 @@ public class BusStop {
 	}
 	
 	public Bus betreteBusNach(Smurf smurf, int targetLocation) throws InterruptedException {
-		int direction = _location > targetLocation ? -1 : 1;
+		Direction direction = _location > targetLocation ? Direction.LEFT : Direction.RIGHT;
 		try {
 			_lock.lock();
 
@@ -98,19 +100,19 @@ public class BusStop {
 		return _location;
 	}
 	
-	private List<Bus> getBusList(int direction) {
-		return direction>0 ? _bussesToTheRight : _bussesToTheLeft;
+	private List<Bus> getBusList(Direction direction) {
+		return Direction.RIGHT.equals(direction) ? _bussesToTheRight : _bussesToTheLeft;
 	}
 	
-	private Condition getLeaveCondition(int direction) {
-		return direction>0 ? _busToTheRightLeaves : _busToTheLeftLeaves;
+	private Condition getLeaveCondition(Direction direction) {
+		return Direction.RIGHT.equals(direction) ? _busToTheRightLeaves : _busToTheLeftLeaves;
 	}
 	
-	private Condition getArriveCondition(int direction) {
-		return direction>0 ? _busToTheRightArrives : _busToTheLeftArrives;
+	private Condition getArriveCondition(Direction direction) {
+		return Direction.RIGHT.equals(direction) ? _busToTheRightArrives : _busToTheLeftArrives;
 	}
 	
-	private Condition getPassengersCondition(int direction) {
-		return direction>0 ? _busToTheRightPassengers : _busToTheLeftPassengers;
+	private Condition getPassengersCondition(Direction direction) {
+		return Direction.RIGHT.equals(direction) ? _busToTheRightPassengers : _busToTheLeftPassengers;
 	}
 }

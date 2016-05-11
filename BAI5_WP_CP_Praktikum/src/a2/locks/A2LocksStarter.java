@@ -3,6 +3,7 @@ package a2.locks;
 import java.util.ArrayList;
 import java.util.List;
 
+import a2.Direction;
 import _untouchable_.busPart4.TestAndEnvironment_A;
 
 public class A2LocksStarter extends TestAndEnvironment_A {
@@ -24,10 +25,10 @@ public class A2LocksStarter extends TestAndEnvironment_A {
 		List<Bus> busse = new ArrayList<Bus>(requestedNumberOfBuses);
 		for(int i=0; i<requestedNumberOfBuses; i++) {
 			int startBusStop = (i%2==0 ? world.getFirstStop() : world.getLastStop());
-			int direction = world.getLastStop() == startBusStop ? -1 : 1;
+			Direction direction = world.getLastStop() == startBusStop ? Direction.LEFT : Direction.RIGHT;
 			Bus bus = new Bus(world, startBusStop, direction, i, requestedMaximumNumberOfSmurfsPerSBus);
-			new Thread(bus).start();
 			busse.add(bus);
+			new Thread(bus).start();
 		}
 		
 		List<Thread> schlumpfThreads = new ArrayList<Thread>();
