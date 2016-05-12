@@ -145,7 +145,7 @@ public class Landing {
 			imUhrzeigersinnVon = start.getId();
 			imUhrzeigersinnBis = start.getId() + medianLandings;
 		} else {
-			imUhrzeigersinnVon = start.getId() + medianLandings;
+			imUhrzeigersinnVon = start.getId() - medianLandings;
 			imUhrzeigersinnBis = start.getId();
 		}
 		return ziel.getId() >= imUhrzeigersinnVon && ziel.getId() < imUhrzeigersinnBis ? Richtung.IM_UHRZEIGERSINN : Richtung.GEGEN_UHRZEIGERSINN;
