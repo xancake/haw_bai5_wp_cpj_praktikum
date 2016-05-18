@@ -2,7 +2,6 @@ package a2.locks;
 
 import java.util.Objects;
 
-import a2.Debug;
 import _untouchable_.busPart4.SSI;
 import _untouchable_.busPart4.Smurf_A;
 
@@ -57,6 +56,6 @@ public class Smurf extends Smurf_A implements Runnable {
 	
 	@Override
 	public boolean getDebugState() {
-		return Debug.DEBUG_SMURF;
+		return A2LocksStarter.DEBUG_SMURF;
 	}
 }

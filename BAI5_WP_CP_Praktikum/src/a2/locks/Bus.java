@@ -10,9 +10,8 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import a2.Debug;
-import a2.Direction;
 import _untouchable_.busPart4.Bus_A;
+import a2.Direction;
 
 public class Bus extends Bus_A implements Runnable {
 	private Lock _lock = new ReentrantLock();
@@ -157,6 +156,6 @@ public class Bus extends Bus_A implements Runnable {
 	
 	@Override
 	public boolean getDebugState() {
-		return Debug.DEBUG_BUS;
+		return A2LocksStarter.DEBUG_BUS;
 	}
 }

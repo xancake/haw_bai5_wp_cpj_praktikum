@@ -57,13 +57,8 @@ public class Ship extends Ship_A implements Runnable {
 				
 				takeTimeForBoardingAt(_currentLanding.getId());
 				
-				try {
-					_lock.lock();
-					_currentLanding.abfahren(this);
-					_currentLanding = null;
-				} finally {
-					_lock.unlock();
-				}
+				_currentLanding.abfahren(this);
+				_currentLanding = null;
 				
 				nextLanding = _fahrplan.poll();
 				takeTimeForSailingTo(nextLanding.getId());
@@ -140,6 +135,6 @@ public class Ship extends Ship_A implements Runnable {
 	
 	@Override
 	public boolean getDebugState() {
-		return Debug.DEBUG_SHIP;
+		return A3Starter.DEBUG_SHIP;
 	}
 }

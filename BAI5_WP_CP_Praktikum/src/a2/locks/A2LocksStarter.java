@@ -12,7 +12,7 @@ public class A2LocksStarter extends TestAndEnvironment_A {
 		A2LocksStarter starter = new A2LocksStarter();
 		starter.letThereBeLife();
 	}
-
+	
 	@Override
 	public void doTest(
 			Integer requestedNumberOfSmurfs,
@@ -53,32 +53,35 @@ public class A2LocksStarter extends TestAndEnvironment_A {
 			bus.terminate();
 		}
 	}
-
+	
+	public static final boolean DEBUG_SMURF = true;
+	public static final boolean DEBUG_BUS   = true;
+	
 	@Override
 	public Integer getWantedNumberOfSmurfs() {
-		return 100;
+		return 1000;
 	}
-
+	
 	@Override
 	public Integer getWantedNumberOfBusses() {
 		return 2;
 	}
-
+	
 	@Override
 	public Integer getWantedNumberOfBusStops() {
 		return 5;
 	}
-
+	
 	@Override
 	public Integer getWantedMaximumNumberOfSmurfsPerBus() {
 		return 17;
 	}
-
+	
 	@Override
 	public Integer getWantedMaximumNumberOfBussesPerBusStop() {
 		return Integer.MAX_VALUE;
 	}
-
+	
 	@Override
 	public String getAuthor() {
 		return "Lars Nielsen & Robert Scheffel";

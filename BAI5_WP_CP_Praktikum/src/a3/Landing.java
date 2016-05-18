@@ -45,6 +45,7 @@ public class Landing {
 			getSchiffList(schiff.getRichtung()).add(schiff);
 			
 			getArriveCondition(schiff.getRichtung()).signalAll();
+			getPassengersCondition(schiff.getRichtung()).signalAll();
 		} finally {
 			_lock.unlock();
 		}

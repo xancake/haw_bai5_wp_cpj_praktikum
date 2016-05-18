@@ -57,9 +57,12 @@ public class A3Starter extends TestAndEnvironment_A {
 		schiffe.forEach(schiff -> schiff.terminate());
 	}
 	
+	public static final boolean DEBUG_SMURF = true;
+	public static final boolean DEBUG_SHIP  = true;
+	
 	@Override
 	public Integer getWantedNumberOfSmurfs() {
-		return 10;
+		return 100;
 	}
 	
 	@Override

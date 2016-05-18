@@ -54,6 +54,6 @@ public class Smurf extends Smurf_A implements Runnable {
 	
 	@Override
 	public boolean getDebugState() {
-		return Debug.DEBUG_SMURF;
+		return A3Starter.DEBUG_SMURF;
 	}
 }

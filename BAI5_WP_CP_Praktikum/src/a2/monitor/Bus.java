@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import a2.Debug;
 import _untouchable_.busPart4.Bus_A;
 
 public class Bus extends Bus_A implements Runnable {
@@ -87,7 +86,7 @@ public class Bus extends Bus_A implements Runnable {
 	
 	@Override
 	public boolean getDebugState() {
-		return Debug.DEBUG_BUS;
+		return A2MonitorStarter.DEBUG_BUS;
 	}
 	
 	public boolean tryEnterBus(Smurf smurf) {

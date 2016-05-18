@@ -42,6 +42,7 @@ public class BusStop {
 			busList.add(bus);
 			
 			getArriveCondition(bus.getDirection()).signalAll();
+			getPassengersCondition(bus.getDirection()).signalAll();
 		} finally {
 			_lock.unlock();
 		}

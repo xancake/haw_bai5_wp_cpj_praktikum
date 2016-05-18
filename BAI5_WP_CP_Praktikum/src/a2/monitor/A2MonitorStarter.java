@@ -56,6 +56,9 @@ public class A2MonitorStarter extends TestAndEnvironment_A {
 			bus.terminate();
 		}
 	}
+	
+	public static final boolean DEBUG_SMURF = false;
+	public static final boolean DEBUG_BUS   = false;
 
 	@Override
 	public Integer getWantedNumberOfSmurfs() {
