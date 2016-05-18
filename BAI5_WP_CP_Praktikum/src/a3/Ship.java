@@ -16,7 +16,7 @@ public class Ship extends Ship_A implements Runnable {
 	private Lock _lock = new ReentrantLock();
 	private Map<Landing, Condition> _landingConditions;
 	
-	private int _id;
+	private final int _id;
 	private final int _sitzplaetze;
 	private Queue<Landing> _fahrplan;
 	private final Richtung _richtung;
@@ -81,44 +81,43 @@ public class Ship extends Ship_A implements Runnable {
 	}
 	
 	public boolean tryBetreten(Smurf schlumpf) {
-		 try {
-			 _lock.lock();
-			 
-			 if(_currentLanding == null) {
-				 throw new IllegalStateException("Schlumpf '" + schlumpf + "' hat versucht das Schiff '" + this + "' zu betreten, obwohl das Schiff gerade garnicht an einer Haltestelle ist.");
-			 }
-			 if(_passagiere.contains(schlumpf)) {
-				 throw new IllegalStateException("Schlumpf '" + schlumpf + "' hat versucht das Schiff '" + this + "' zu betreten, ist aber bereits darin!");
-			 }
-			 
-			 if(_passagiere.size() < _sitzplaetze) {
-				 _passagiere.add(schlumpf);
-				 schlumpf.enter(this);
-				 return true;
-			 } else {
-				 return false;
-			 }
-		 } finally {
-			 _lock.unlock();
-		 }
+		try {
+			_lock.lock();
+			
+			if(_currentLanding == null) {
+				throw new IllegalStateException("Schlumpf '" + schlumpf + "' hat versucht das Schiff '" + this + "' zu betreten, obwohl das Schiff gerade garnicht an einer Haltestelle ist.");
+			}
+			if(_passagiere.contains(schlumpf)) {
+				throw new IllegalStateException("Schlumpf '" + schlumpf + "' hat versucht das Schiff '" + this + "' zu betreten, ist aber bereits darin!");
+			}
+			if(_passagiere.size() >= _sitzplaetze) {
+				return false;
+			}
+			
+			_passagiere.add(schlumpf);
+			schlumpf.enter(this);
+			return true;
+		} finally {
+			_lock.unlock();
+		}
 	}
 	
 	public void verlassen(Smurf schlumpf) {
-		 try {
-			 _lock.lock();
-			 
-			 if(_currentLanding == null) {
-				 throw new IllegalStateException("Schlumpf '" + schlumpf + "' hat versucht das Schiff '" + this + "' zu verlassen, obwohl das Schiff gerade garnicht an einer Haltestelle ist.");
-			 }
-			 if(!_passagiere.contains(schlumpf)) {
-				 throw new IllegalStateException("Schlumpf '" + schlumpf + "' hat versucht das Schiff '" + this + "' zu verlassen, ist aber garnicht darin!");
-			 }
-			 
-			 _passagiere.remove(schlumpf);
-			 schlumpf.leave(this);
-		 } finally {
-			 _lock.unlock();
-		 }
+		try {
+			_lock.lock();
+			
+			if(_currentLanding == null) {
+				throw new IllegalStateException("Schlumpf '" + schlumpf + "' hat versucht das Schiff '" + this + "' zu verlassen, obwohl das Schiff gerade garnicht an einer Haltestelle ist.");
+			}
+			if(!_passagiere.contains(schlumpf)) {
+				throw new IllegalStateException("Schlumpf '" + schlumpf + "' hat versucht das Schiff '" + this + "' zu verlassen, ist aber garnicht darin!");
+			}
+			
+			_passagiere.remove(schlumpf);
+			schlumpf.leave(this);
+		} finally {
+			_lock.unlock();
+		}
 	}
 	
 	public void erwarteAnkunft(Landing landing) throws InterruptedException {

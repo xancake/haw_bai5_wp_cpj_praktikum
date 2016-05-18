@@ -1,8 +1,10 @@
 package a2.locks;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -18,10 +20,12 @@ public class Bus extends Bus_A implements Runnable {
 	
 	private Lock _passengerLock = new ReentrantLock();
 	
-	private int _id;
-	private int _freeSeats;
+	private final int _id;
+	private final int _seats;
+	private Set<Smurf> _passengers;
 	private Stack<BusStop> _fahrplan;
 	private Stack<BusStop> _fahrplanZurueck;
+	private BusStop _currentStop;
 	private Direction _direction;
 	
 	private boolean _run;
@@ -32,7 +36,8 @@ public class Bus extends Bus_A implements Runnable {
 		}
 		
 		_id = id;
-		_freeSeats = seats;
+		_seats = seats;
+		_passengers = new HashSet<>();
 		_fahrplan = Objects.requireNonNull(fahrplan);
 		_fahrplanZurueck = new Stack<BusStop>();
 		_direction = direction;
@@ -48,26 +53,26 @@ public class Bus extends Bus_A implements Runnable {
 		_run = true;
 		try {
 			
-			BusStop currentStop = null;
+			_currentStop = null;
 			BusStop nextStop = _fahrplan.pop();
 			
 			while(_run) {
 				_fahrplanZurueck.add(nextStop);
-				currentStop = nextStop;
-				currentStop.anfahren(this);
+				_currentStop = nextStop;
+				_currentStop.anfahren(this);
 				
 				// Passagiere benachrichtigen, dass eine Haltestelle erreicht wurde
 				try {
 					_lock.lock();
-					_stopConditions.get(currentStop).signalAll();
+					_stopConditions.get(_currentStop).signalAll();
 				} finally {
 					_lock.unlock();
 				}
 				
-				takeTimeForStopoverAt(currentStop.getLocation());
-
-				currentStop.abfahren(this);
-				currentStop = null;
+				takeTimeForStopoverAt(_currentStop.getLocation());
+				
+				_currentStop.abfahren(this);
+				_currentStop = null;
 				nextStop = _fahrplan.pop();
 				
 				// Richtung umdrehen, wenn wir uns am Ende befinden
@@ -91,12 +96,19 @@ public class Bus extends Bus_A implements Runnable {
 		try {
 			_passengerLock.lock();
 			
-			boolean hasFreeSeats = _freeSeats > 0;
-			if(hasFreeSeats) {
-				_freeSeats--;
-				smurf.enter(this);
+			if(_currentStop == null) {
+				throw new IllegalStateException("Schlumpf '" + smurf + "' hat versucht den Bus '" + this + "' zu betreten, obwohl der Bus gerade garnicht an einer Haltestelle ist.");
 			}
-			return hasFreeSeats;
+			if(_passengers.contains(smurf)) {
+				throw new IllegalStateException("Schlumpf '" + smurf + "' hat versucht den Bus '" + this + "' zu betreten, ist aber bereits darin!");
+			}
+			if(_passengers.size() >= _seats) {
+				return false;
+			}
+			
+			_passengers.add(smurf);
+			smurf.enter(this);
+			return true;
 		} finally {
 			_passengerLock.unlock();
 		}
@@ -106,7 +118,14 @@ public class Bus extends Bus_A implements Runnable {
 		try {
 			_passengerLock.lock();
 			
-			_freeSeats++;
+			if(_currentStop == null) {
+				throw new IllegalStateException("Schlumpf '" + smurf + "' hat versucht den Bus '" + this + "' zu verlassen, obwohl der Bus gerade garnicht an einer Haltestelle ist.");
+			}
+			if(!_passengers.contains(smurf)) {
+				throw new IllegalStateException("Schlumpf '" + smurf + "' hat versucht den Bus '" + this + "' zu verlassen, ist aber garnicht darin!");
+			}
+			
+			_passengers.remove(smurf);
 			smurf.leave(this);
 		} finally {
 			_passengerLock.unlock();
