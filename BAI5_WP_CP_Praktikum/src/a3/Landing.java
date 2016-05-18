@@ -137,17 +137,16 @@ public class Landing {
 		return true;
 	}
 	
-	private static Richtung berechneRichtung(Landing start, Landing ziel, int maxLandings) {
+	public static Richtung berechneRichtung(Landing start, Landing ziel, int maxLandings) {
 		int medianLandings = maxLandings / Richtung.values().length;
-		int imUhrzeigersinnVon;
-		int imUhrzeigersinnBis;
 		if(start.getId() < medianLandings) {
-			imUhrzeigersinnVon = start.getId();
-			imUhrzeigersinnBis = start.getId() + medianLandings;
+			int imUhrzeigersinnVon = start.getId();
+			int imUhrzeigersinnBis = start.getId() + medianLandings;
+			return ziel.getId() >= imUhrzeigersinnVon && ziel.getId() <= imUhrzeigersinnBis ? Richtung.IM_UHRZEIGERSINN : Richtung.GEGEN_UHRZEIGERSINN;
 		} else {
-			imUhrzeigersinnVon = start.getId() - medianLandings;
-			imUhrzeigersinnBis = start.getId();
+			int imUhrzeigersinnVon = start.getId() - medianLandings;
+			int imUhrzeigersinnBis = start.getId();
+			return ziel.getId() <= imUhrzeigersinnVon || ziel.getId() >= imUhrzeigersinnBis ? Richtung.IM_UHRZEIGERSINN : Richtung.GEGEN_UHRZEIGERSINN;
 		}
-		return ziel.getId() >= imUhrzeigersinnVon && ziel.getId() < imUhrzeigersinnBis ? Richtung.IM_UHRZEIGERSINN : Richtung.GEGEN_UHRZEIGERSINN;
 	}
 }
