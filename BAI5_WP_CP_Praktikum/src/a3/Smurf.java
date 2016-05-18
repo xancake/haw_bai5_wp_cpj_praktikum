@@ -32,7 +32,7 @@ public class Smurf extends Smurf_A implements Runnable {
 					Ship currentSchiff = currentLanding.betreteSchiffNach(nextLanding, this);
 					
 					beThere(currentSchiff);
-					currentSchiff.awaitAnkunft(nextLanding);
+					currentSchiff.erwarteAnkunft(nextLanding);
 					currentLanding = nextLanding;
 					
 					currentLanding.verlasseSchiff(currentSchiff, this);

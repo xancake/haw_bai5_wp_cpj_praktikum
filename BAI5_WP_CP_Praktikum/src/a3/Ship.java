@@ -21,7 +21,7 @@ public class Ship extends Ship_A implements Runnable {
 	private Queue<Landing> _fahrplan;
 	private final Richtung _richtung;
 	private List<Smurf> _passagiere;
-	
+	private Landing _currentLanding;
 	private boolean _running;
 	
 	public Ship(int id, int sitzplaetze, Queue<Landing> fahrplan, Richtung richtung) {
@@ -39,28 +39,28 @@ public class Ship extends Ship_A implements Runnable {
 	@Override
 	public void run() {
 		_running = true;
-		Landing currentLanding = null;
+		_currentLanding = null;
 		Landing nextLanding = _fahrplan.poll();
 		try {
 			while(_running) {
 				_fahrplan.offer(nextLanding);
-				currentLanding = nextLanding;
-				currentLanding.andocken(this);
+				_currentLanding = nextLanding;
+				_currentLanding.andocken(this);
 				
 				// Passagiere benachrichtigen, dass eine Haltestelle erreicht wurde
 				try {
 					_lock.lock();
-					_landingConditions.get(currentLanding).signalAll();
+					_landingConditions.get(_currentLanding).signalAll();
 				} finally {
 					_lock.unlock();
 				}
 				
-				takeTimeForBoardingAt(currentLanding.getId());
+				takeTimeForBoardingAt(_currentLanding.getId());
 				
 				try {
 					_lock.lock();
-					currentLanding.abfahren(this);
-					currentLanding = null;
+					_currentLanding.abfahren(this);
+					_currentLanding = null;
 				} finally {
 					_lock.unlock();
 				}
@@ -84,8 +84,11 @@ public class Ship extends Ship_A implements Runnable {
 		 try {
 			 _lock.lock();
 			 
+			 if(_currentLanding == null) {
+				 throw new IllegalStateException("Schlumpf '" + schlumpf + "' hat versucht das Schiff '" + this + "' zu betreten, obwohl das Schiff gerade garnicht an einer Haltestelle ist.");
+			 }
 			 if(_passagiere.contains(schlumpf)) {
-				 throw new IllegalStateException("Schlumpf '" + schlumpf + "' will den Bus '" + this + "' betreten, ist aber bereits darin!");
+				 throw new IllegalStateException("Schlumpf '" + schlumpf + "' hat versucht das Schiff '" + this + "' zu betreten, ist aber bereits darin!");
 			 }
 			 
 			 if(_passagiere.size() < _sitzplaetze) {
@@ -100,22 +103,25 @@ public class Ship extends Ship_A implements Runnable {
 		 }
 	}
 	
-	public void verlassen(Smurf smurf) {
+	public void verlassen(Smurf schlumpf) {
 		 try {
 			 _lock.lock();
 			 
-			 if(!_passagiere.contains(smurf)) {
-				 throw new IllegalStateException("Schlumpf '" + smurf + "' will den Bus '" + this + "' verlassen, ist aber garnicht darin!");
+			 if(_currentLanding == null) {
+				 throw new IllegalStateException("Schlumpf '" + schlumpf + "' hat versucht das Schiff '" + this + "' zu verlassen, obwohl das Schiff gerade garnicht an einer Haltestelle ist.");
+			 }
+			 if(!_passagiere.contains(schlumpf)) {
+				 throw new IllegalStateException("Schlumpf '" + schlumpf + "' hat versucht das Schiff '" + this + "' zu verlassen, ist aber garnicht darin!");
 			 }
 			 
-			 _passagiere.remove(smurf);
-			 smurf.leave(this);
+			 _passagiere.remove(schlumpf);
+			 schlumpf.leave(this);
 		 } finally {
 			 _lock.unlock();
 		 }
 	}
 	
-	public void awaitAnkunft(Landing landing) throws InterruptedException {
+	public void erwarteAnkunft(Landing landing) throws InterruptedException {
 		try {
 			_lock.lock();
 			_landingConditions.get(landing).await();
