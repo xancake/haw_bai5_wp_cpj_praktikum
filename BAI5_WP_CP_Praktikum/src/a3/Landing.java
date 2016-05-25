@@ -79,11 +79,12 @@ public class Landing {
 			_lock.lock();
 			
 			while(true) {
-				while(getSchiffList(richtung).isEmpty()) {
+				List<Ship> schiffListe = getSchiffList(richtung);
+				while(schiffListe.isEmpty()) {
 					getArriveCondition(richtung).await();
 				}
 				
-				for(Ship schiff : getSchiffList(richtung)) {
+				for(Ship schiff : schiffListe) {
 					if(schiff.tryBetreten(schlumpf)) {
 						return schiff;
 					}
