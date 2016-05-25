@@ -9,7 +9,7 @@ public class LandingTest {
 	public void testBerechneRichtung_6Landings_0to0() {
 		Landing start = new Landing(0, 0, 6);
 		Landing ziel = new Landing(0, 0, 6);
-		assertEquals(Richtung.IM_UHRZEIGERSINN, Landing.berechneRichtung(start, ziel, 6));
+		assertEquals(null, Landing.berechneRichtung(start, ziel, 6));
 	}
 	
 	@Test
@@ -30,7 +30,7 @@ public class LandingTest {
 	public void testBerechneRichtung_6Landings_0to3() {
 		Landing start = new Landing(0, 0, 6);
 		Landing ziel = new Landing(3, 0, 6);
-		assertEquals(Richtung.IM_UHRZEIGERSINN, Landing.berechneRichtung(start, ziel, 6));
+		assertEquals(null, Landing.berechneRichtung(start, ziel, 6));
 	}
 	
 	@Test
@@ -58,7 +58,7 @@ public class LandingTest {
 	public void testBerechneRichtung_6Landings_1to1() {
 		Landing start = new Landing(1, 0, 6);
 		Landing ziel = new Landing(1, 0, 6);
-		assertEquals(Richtung.IM_UHRZEIGERSINN, Landing.berechneRichtung(start, ziel, 6));
+		assertEquals(null, Landing.berechneRichtung(start, ziel, 6));
 	}
 	
 	@Test
@@ -79,7 +79,7 @@ public class LandingTest {
 	public void testBerechneRichtung_6Landings_1to4() {
 		Landing start = new Landing(1, 0, 6);
 		Landing ziel = new Landing(4, 0, 6);
-		assertEquals(Richtung.IM_UHRZEIGERSINN, Landing.berechneRichtung(start, ziel, 6));
+		assertEquals(null, Landing.berechneRichtung(start, ziel, 6));
 	}
 	
 	@Test
@@ -107,7 +107,7 @@ public class LandingTest {
 	public void testBerechneRichtung_6Landings_2to2() {
 		Landing start = new Landing(2, 0, 6);
 		Landing ziel = new Landing(2, 0, 6);
-		assertEquals(Richtung.IM_UHRZEIGERSINN, Landing.berechneRichtung(start, ziel, 6));
+		assertEquals(null, Landing.berechneRichtung(start, ziel, 6));
 	}
 	
 	@Test
@@ -128,14 +128,14 @@ public class LandingTest {
 	public void testBerechneRichtung_6Landings_2to5() {
 		Landing start = new Landing(2, 0, 6);
 		Landing ziel = new Landing(5, 0, 6);
-		assertEquals(Richtung.IM_UHRZEIGERSINN, Landing.berechneRichtung(start, ziel, 6));
+		assertEquals(null, Landing.berechneRichtung(start, ziel, 6));
 	}
 	
 	@Test
 	public void testBerechneRichtung_6Landings_3to0() {
 		Landing start = new Landing(3, 0, 6);
 		Landing ziel = new Landing(0, 0, 6);
-		assertEquals(Richtung.IM_UHRZEIGERSINN, Landing.berechneRichtung(start, ziel, 6));
+		assertEquals(null, Landing.berechneRichtung(start, ziel, 6));
 	}
 	
 	@Test
@@ -156,7 +156,7 @@ public class LandingTest {
 	public void testBerechneRichtung_6Landings_3to3() {
 		Landing start = new Landing(3, 0, 6);
 		Landing ziel = new Landing(3, 0, 6);
-		assertEquals(Richtung.IM_UHRZEIGERSINN, Landing.berechneRichtung(start, ziel, 6));
+		assertEquals(null, Landing.berechneRichtung(start, ziel, 6));
 	}
 	
 	@Test
@@ -184,7 +184,7 @@ public class LandingTest {
 	public void testBerechneRichtung_6Landings_4to1() {
 		Landing start = new Landing(4, 0, 6);
 		Landing ziel = new Landing(1, 0, 6);
-		assertEquals(Richtung.IM_UHRZEIGERSINN, Landing.berechneRichtung(start, ziel, 6));
+		assertEquals(null, Landing.berechneRichtung(start, ziel, 6));
 	}
 	
 	@Test
@@ -205,7 +205,7 @@ public class LandingTest {
 	public void testBerechneRichtung_6Landings_4to4() {
 		Landing start = new Landing(4, 0, 6);
 		Landing ziel = new Landing(4, 0, 6);
-		assertEquals(Richtung.IM_UHRZEIGERSINN, Landing.berechneRichtung(start, ziel, 6));
+		assertEquals(null, Landing.berechneRichtung(start, ziel, 6));
 	}
 	
 	@Test
@@ -233,7 +233,7 @@ public class LandingTest {
 	public void testBerechneRichtung_6Landings_5to2() {
 		Landing start = new Landing(5, 0, 6);
 		Landing ziel = new Landing(2, 0, 6);
-		assertEquals(Richtung.IM_UHRZEIGERSINN, Landing.berechneRichtung(start, ziel, 6));
+		assertEquals(null, Landing.berechneRichtung(start, ziel, 6));
 	}
 	
 	@Test
@@ -254,6 +254,6 @@ public class LandingTest {
 	public void testBerechneRichtung_6Landings_5to5() {
 		Landing start = new Landing(5, 0, 6);
 		Landing ziel = new Landing(5, 0, 6);
-		assertEquals(Richtung.IM_UHRZEIGERSINN, Landing.berechneRichtung(start, ziel, 6));
+		assertEquals(null, Landing.berechneRichtung(start, ziel, 6));
 	}
 }

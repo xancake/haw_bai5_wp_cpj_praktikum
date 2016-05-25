@@ -62,7 +62,7 @@ public class A3Starter extends TestAndEnvironment_A {
 	
 	@Override
 	public Integer getWantedNumberOfSmurfs() {
-		return 100;
+		return 1000;
 	}
 	
 	@Override
@@ -77,7 +77,7 @@ public class A3Starter extends TestAndEnvironment_A {
 	
 	@Override
 	public Integer getWantedMaximumNumberOfSmurfsPerShip() {
-		return 3;
+		return 97;
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package a3;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.Condition;
@@ -14,6 +15,9 @@ public class Landing {
 	private Condition _schiffGegenUhrzeigersinnArrives = _lock.newCondition();
 	private Condition _schiffGegenUhrzeigersinnLeaves = _lock.newCondition();
 	private Condition _schiffGegenUhrzeigersinnPassengers = _lock.newCondition();
+	
+	private Condition _schiffNachEgalArrives = _lock.newCondition();
+	private Condition _schiffNachEgalPassengers = _lock.newCondition();
 	
 	private int _id;
 	private int _maxAnzahlSchiffeAnHaltestelle;
@@ -46,6 +50,8 @@ public class Landing {
 			
 			getArriveCondition(schiff.getRichtung()).signalAll();
 			getPassengersCondition(schiff.getRichtung()).signalAll();
+			_schiffNachEgalArrives.signalAll();
+			_schiffNachEgalPassengers.signalAll();
 		} finally {
 			_lock.unlock();
 		}
@@ -69,8 +75,8 @@ public class Landing {
 		try {
 			_lock.lock();
 			
-			List<Ship> schiffeInRichtung = getSchiffList(richtung);
 			while(true) {
+				List<Ship> schiffeInRichtung = getSchiffList(richtung);
 				while(schiffeInRichtung.isEmpty()) {
 					getArriveCondition(richtung).await();
 				}
@@ -95,12 +101,19 @@ public class Landing {
 			schiff.verlassen(schlumpf);
 			
 			getPassengersCondition(schiff.getRichtung()).signal();
+			_schiffNachEgalPassengers.signal();
 		} finally {
 			_lock.unlock();
 		}
 	}
 	
 	private List<Ship> getSchiffList(Richtung richtung) {
+		if(richtung == null) {
+			List<Ship> schiffeInAlleRichtungen = new ArrayList<Ship>(_schiffeImUhrzeigersinn.size() + _schiffeGegenUhrzeigersinn.size());
+			schiffeInAlleRichtungen.addAll(_schiffeImUhrzeigersinn);
+			schiffeInAlleRichtungen.addAll(_schiffeGegenUhrzeigersinn);
+			return schiffeInAlleRichtungen;
+		}
 		return Richtung.IM_UHRZEIGERSINN.equals(richtung) ? _schiffeImUhrzeigersinn : _schiffeGegenUhrzeigersinn;
 	}
 	
@@ -109,10 +122,16 @@ public class Landing {
 	}
 	
 	private Condition getArriveCondition(Richtung richtung) {
+		if(richtung == null) {
+			return _schiffNachEgalArrives;
+		}
 		return Richtung.IM_UHRZEIGERSINN.equals(richtung) ? _schiffImUhrzeigersinnArrives : _schiffGegenUhrzeigersinnArrives;
 	}
 	
 	private Condition getPassengersCondition(Richtung richtung) {
+		if(richtung == null) {
+			return _schiffNachEgalPassengers;
+		}
 		return Richtung.IM_UHRZEIGERSINN.equals(richtung) ? _schiffImUhrzeigersinnPassengers : _schiffGegenUhrzeigersinnPassengers;
 	}
 	
@@ -140,11 +159,19 @@ public class Landing {
 	
 	public static Richtung berechneRichtung(Landing start, Landing ziel, int maxLandings) {
 		int medianLandings = maxLandings / Richtung.values().length;
-		if(start.getId() < medianLandings) {
+		if(start.getId() == ziel.getId()) {
+			return null;
+		} else if(start.getId() < medianLandings) {
+			if(start.getId() + medianLandings == ziel.getId()) {
+				return null;
+			}
 			int imUhrzeigersinnVon = start.getId();
 			int imUhrzeigersinnBis = start.getId() + medianLandings;
 			return ziel.getId() >= imUhrzeigersinnVon && ziel.getId() <= imUhrzeigersinnBis ? Richtung.IM_UHRZEIGERSINN : Richtung.GEGEN_UHRZEIGERSINN;
 		} else {
+			if(start.getId() - medianLandings == ziel.getId()) {
+				return null;
+			}
 			int imUhrzeigersinnVon = start.getId() - medianLandings;
 			int imUhrzeigersinnBis = start.getId();
 			return ziel.getId() <= imUhrzeigersinnVon || ziel.getId() >= imUhrzeigersinnBis ? Richtung.IM_UHRZEIGERSINN : Richtung.GEGEN_UHRZEIGERSINN;
