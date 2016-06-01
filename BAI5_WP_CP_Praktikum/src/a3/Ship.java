@@ -128,6 +128,15 @@ public class Ship extends Ship_A implements Runnable {
 		return _richtung;
 	}
 	
+	public int getFreieSitzplaetze() {
+		try {
+			_lock.lock();
+			return _sitzplaetze - _passagiere.size();
+		} finally {
+			_lock.unlock();
+		}
+	}
+	
 	@Override
 	public int identify() {
 		return _id;

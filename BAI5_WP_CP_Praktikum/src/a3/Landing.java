@@ -38,7 +38,7 @@ public class Landing {
 		try {
 			_lock.lock();
 			
-			while(_schiffeImUhrzeigersinn.size() + _schiffeGegenUhrzeigersinn.size() >= _maxAnzahlSchiffeAnHaltestelle) {
+			while(_schiffeNachEgal.size() >= _maxAnzahlSchiffeAnHaltestelle) {
 				getLeaveCondition(schiff.getRichtung()).await();
 			}
 			
@@ -46,8 +46,12 @@ public class Landing {
 			getSchiffList(schiff.getRichtung()).add(schiff);
 			getSchiffList(null).add(schiff);
 			
-			getArriveCondition(schiff.getRichtung()).signalAll();
-			getArriveCondition(null).signalAll();
+			int freiePlaetze = schiff.getFreieSitzplaetze();
+			for(int i=0; i<freiePlaetze; i++) {
+				// Noch nicht so richtig schön, da wir nun pro freien Sitzplatz zwei Schlümpfe wecken, aber schonmal nicht mehr ALLE
+				getArriveCondition(schiff.getRichtung()).signal();
+				getArriveCondition(null).signal();
+			}
 		} finally {
 			_lock.unlock();
 		}

@@ -20,7 +20,7 @@ public class A3Starter extends TestAndEnvironment_A {
 			Integer requestedMaximumNumberOfSmurfsPerShip,
 			Integer requestedMaximumNumberOfShipsPerLanding
 	) {
-		Insel insel = new Insel(requestedNumberOfLandings, requestedMaximumNumberOfShipsPerLanding);
+		Landings insel = new Landings(requestedNumberOfLandings, requestedMaximumNumberOfShipsPerLanding);
 		
 		List<Landing> haltestellen = new ArrayList<>(insel.getLandings());
 		
@@ -57,8 +57,8 @@ public class A3Starter extends TestAndEnvironment_A {
 		schiffe.forEach(schiff -> schiff.terminate());
 	}
 	
-	public static final boolean DEBUG_SMURF = true;
-	public static final boolean DEBUG_SHIP  = true;
+	public static final boolean DEBUG_SMURF = false;
+	public static final boolean DEBUG_SHIP  = false;
 	
 	@Override
 	public Integer getWantedNumberOfSmurfs() {

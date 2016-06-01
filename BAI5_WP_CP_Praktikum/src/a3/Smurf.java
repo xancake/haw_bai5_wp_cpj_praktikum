@@ -7,9 +7,9 @@ import _untouchable_.shipPart5.Smurf_A;
 
 public class Smurf extends Smurf_A implements Runnable {
 	private int _id;
-	private Insel _insel;
+	private Landings _insel;
 	
-	public Smurf(int id, Insel insel) {
+	public Smurf(int id, Landings insel) {
 		_id = id;
 		_insel = Objects.requireNonNull(insel);
 	}
