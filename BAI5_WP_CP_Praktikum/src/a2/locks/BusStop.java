@@ -12,10 +12,8 @@ public class BusStop {
 	private Lock _lock = new ReentrantLock();
 	private Condition _busToTheLeftArrives = _lock.newCondition();
 	private Condition _busToTheLeftLeaves = _lock.newCondition();
-	private Condition _busToTheLeftPassengers = _lock.newCondition();
 	private Condition _busToTheRightArrives = _lock.newCondition();
 	private Condition _busToTheRightLeaves = _lock.newCondition();
-	private Condition _busToTheRightPassengers = _lock.newCondition();
 	
 	private int _location;
 	private int _maxBusses;
@@ -42,7 +40,6 @@ public class BusStop {
 			busList.add(bus);
 			
 			getArriveCondition(bus.getDirection()).signalAll();
-			getPassengersCondition(bus.getDirection()).signalAll();
 		} finally {
 			_lock.unlock();
 		}
@@ -78,7 +75,7 @@ public class BusStop {
 					}
 				}
 				
-				getPassengersCondition(direction).await();
+				getArriveCondition(direction).await();
 			}
 		} finally {
 			_lock.unlock();
@@ -91,7 +88,7 @@ public class BusStop {
 			
 			bus.leaveBus(smurf);
 			
-			getPassengersCondition(bus.getDirection()).signal();
+			getArriveCondition(bus.getDirection()).signal();
 		} finally {
 			_lock.unlock();
 		}
@@ -111,9 +108,5 @@ public class BusStop {
 	
 	private Condition getArriveCondition(Direction direction) {
 		return Direction.RIGHT.equals(direction) ? _busToTheRightArrives : _busToTheLeftArrives;
-	}
-	
-	private Condition getPassengersCondition(Direction direction) {
-		return Direction.RIGHT.equals(direction) ? _busToTheRightPassengers : _busToTheLeftPassengers;
 	}
 }

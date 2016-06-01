@@ -17,8 +17,6 @@ public class Bus extends Bus_A implements Runnable {
 	private Lock _lock = new ReentrantLock();
 	private Map<BusStop, Condition> _stopConditions;
 	
-	private Lock _passengerLock = new ReentrantLock();
-	
 	private final int _id;
 	private final int _seats;
 	private Set<Smurf> _passengers;
@@ -93,7 +91,7 @@ public class Bus extends Bus_A implements Runnable {
 	
 	public boolean tryEnterBus(Smurf smurf) {
 		try {
-			_passengerLock.lock();
+			_lock.lock();
 			
 			if(_currentStop == null) {
 				throw new IllegalStateException("Schlumpf '" + smurf + "' hat versucht den Bus '" + this + "' zu betreten, obwohl der Bus gerade garnicht an einer Haltestelle ist.");
@@ -109,13 +107,13 @@ public class Bus extends Bus_A implements Runnable {
 			smurf.enter(this);
 			return true;
 		} finally {
-			_passengerLock.unlock();
+			_lock.unlock();
 		}
 	}
 	
 	public void leaveBus(Smurf smurf) {
 		try {
-			_passengerLock.lock();
+			_lock.lock();
 			
 			if(_currentStop == null) {
 				throw new IllegalStateException("Schlumpf '" + smurf + "' hat versucht den Bus '" + this + "' zu verlassen, obwohl der Bus gerade garnicht an einer Haltestelle ist.");
@@ -127,7 +125,7 @@ public class Bus extends Bus_A implements Runnable {
 			_passengers.remove(smurf);
 			smurf.leave(this);
 		} finally {
-			_passengerLock.unlock();
+			_lock.unlock();
 		}
 	}
 	
@@ -143,6 +141,15 @@ public class Bus extends Bus_A implements Runnable {
 	public Direction getDirection() {
 		return _direction;
 	}
+	
+//	public int getFreieSitzplaetze() {
+//		try {
+//			_lock.lock();
+//			return _seats - _passengers.size();
+//		} finally {
+//			_lock.unlock();
+//		}
+//	}
 	
 	@Override
 	public void terminate() {

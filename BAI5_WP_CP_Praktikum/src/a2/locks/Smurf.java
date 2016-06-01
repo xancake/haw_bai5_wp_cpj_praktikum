@@ -26,7 +26,7 @@ public class Smurf extends Smurf_A implements Runnable {
 				if(currentBusStop == null) {
 					currentBusStop =  targetBusStop;
 				}
-
+				
 				// Müssen noch hinfahren
 				if(currentBusStop.getLocation() != targetBusStop.getLocation()) {
 					Bus currentBus = currentBusStop.betreteBusNach(this, targetBusStop.getLocation());
