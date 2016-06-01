@@ -31,15 +31,17 @@ public class BusStop {
 		try {
 			_lock.lock();
 			
-			List<Bus> busList = getBusList(bus.getDirection());
-			while(busList.size() >= _maxBusses) {
+			while(_bussesToTheLeft.size() + _bussesToTheRight.size() >= _maxBusses) {
 				getLeaveCondition(bus.getDirection()).await();
 			}
 			
 			bus.stopAt(_location);
-			busList.add(bus);
+			getBusList(bus.getDirection()).add(bus);
 			
-			getArriveCondition(bus.getDirection()).signalAll();
+			int freeSeats = bus.getFreeSeats();
+			for(int i=0; i<freeSeats; i++) {
+				getArriveCondition(bus.getDirection()).signal();
+			}
 		} finally {
 			_lock.unlock();
 		}

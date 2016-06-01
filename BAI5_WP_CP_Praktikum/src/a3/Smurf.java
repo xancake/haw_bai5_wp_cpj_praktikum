@@ -16,27 +16,23 @@ public class Smurf extends Smurf_A implements Runnable {
 	
 	@Override
 	public void run() {
-		Landing currentLanding = null;
 		try {
+			// An der ersten Haltestelle des Schedules beginnen
+			SSI ssi = schedule.next();
+			Landing currentLanding = _insel.getLanding(ssi.getPlanedPosition());
+			takeTimeForDoingStuffAtCurrentPosition(currentLanding.getId(), ssi);
+			
 			while(schedule.hasNext()) {
-				SSI ssi = schedule.next();
+				ssi = schedule.next();
 				Landing nextLanding = _insel.getLanding(ssi.getPlanedPosition());
 				
-				// An der ersten Haltestelle des Schedules beginnen
-				if(currentLanding == null) {
-					currentLanding = nextLanding;
-				}
+				Ship currentSchiff = currentLanding.betreteSchiffNach(nextLanding, this);
 				
-				// Müssen noch hinfahren
-				if(!currentLanding.equals(nextLanding)) {
-					Ship currentSchiff = currentLanding.betreteSchiffNach(nextLanding, this);
-					
-					beThere(currentSchiff);
-					currentSchiff.erwarteAnkunft(nextLanding);
-					currentLanding = nextLanding;
-					
-					currentLanding.verlasseSchiff(currentSchiff, this);
-				}
+				beThere(currentSchiff);
+				currentSchiff.erwarteAnkunft(nextLanding);
+				currentLanding = nextLanding;
+				
+				currentLanding.verlasseSchiff(currentSchiff, this);
 				
 				takeTimeForDoingStuffAtCurrentPosition(currentLanding.getId(), ssi);
 			}

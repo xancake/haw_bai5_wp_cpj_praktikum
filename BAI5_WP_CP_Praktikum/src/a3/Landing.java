@@ -76,8 +76,8 @@ public class Landing {
 		try {
 			_lock.lock();
 			
+			List<Ship> schiffListe = getSchiffList(richtung);
 			while(true) {
-				List<Ship> schiffListe = getSchiffList(richtung);
 				while(schiffListe.isEmpty()) {
 					getArriveCondition(richtung).await();
 				}

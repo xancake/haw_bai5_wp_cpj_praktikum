@@ -48,11 +48,9 @@ public class Bus extends Bus_A implements Runnable {
 	@Override
 	public void run() {
 		_run = true;
+		_currentStop = null;
+		BusStop nextStop = _fahrplan.pop();
 		try {
-			
-			_currentStop = null;
-			BusStop nextStop = _fahrplan.pop();
-			
 			while(_run) {
 				_fahrplanZurueck.add(nextStop);
 				_currentStop = nextStop;
@@ -142,14 +140,14 @@ public class Bus extends Bus_A implements Runnable {
 		return _direction;
 	}
 	
-//	public int getFreieSitzplaetze() {
-//		try {
-//			_lock.lock();
-//			return _seats - _passengers.size();
-//		} finally {
-//			_lock.unlock();
-//		}
-//	}
+	public int getFreeSeats() {
+		try {
+			_lock.lock();
+			return _seats - _passengers.size();
+		} finally {
+			_lock.unlock();
+		}
+	}
 	
 	@Override
 	public void terminate() {

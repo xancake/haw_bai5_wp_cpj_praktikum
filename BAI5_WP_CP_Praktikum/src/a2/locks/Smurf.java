@@ -16,30 +16,24 @@ public class Smurf extends Smurf_A implements Runnable {
 	
 	@Override
 	public void run() {
-		BusStop currentBusStop = null;
 		try {
+			// An der ersten Haltestelle des Schedules beginnen
+			SSI ssi = schedule.next();
+			BusStop currentBusStop = _world.getBusStop(ssi.getPlanedPosition());
+			takeTimeForDoingStuffAtCurrentPosition(currentBusStop.getLocation(), ssi);
+			
 			while(schedule.hasNext()) {
-				SSI ssi = schedule.next();
+				ssi = schedule.next();
 				BusStop targetBusStop = _world.getBusStop(ssi.getPlanedPosition());
 				
-				// An der ersten Haltestelle des Schedules beginnen
-				if(currentBusStop == null) {
-					currentBusStop =  targetBusStop;
-				}
+				Bus currentBus = currentBusStop.betreteBusNach(this, targetBusStop.getLocation());
 				
-				// Müssen noch hinfahren
-				if(currentBusStop.getLocation() != targetBusStop.getLocation()) {
-					Bus currentBus = currentBusStop.betreteBusNach(this, targetBusStop.getLocation());
-					
-					// Im Bus sein und warten, bis die Zielhaltestelle erreicht wurde
-					beThere(currentBus);
-					currentBus.awaitArrivalAt(targetBusStop);
-					currentBusStop = targetBusStop;
-					
-					currentBusStop.verlasseBus(this, currentBus);
-				}
+				beThere(currentBus);
+				currentBus.awaitArrivalAt(targetBusStop);
+				currentBusStop = targetBusStop;
 				
-				// Sind an der Zielhaltestelle
+				currentBusStop.verlasseBus(this, currentBus);
+				
 				takeTimeForDoingStuffAtCurrentPosition(currentBusStop.getLocation(), ssi);
 			}
 		} catch(InterruptedException e) {
