@@ -10,13 +10,9 @@ public class Landing {
 	private Lock _lock = new ReentrantLock();
 	private Condition _schiffImUhrzeigersinnArrives = _lock.newCondition();
 	private Condition _schiffImUhrzeigersinnLeaves = _lock.newCondition();
-	private Condition _schiffImUhrzeigersinnPassengers = _lock.newCondition();
 	private Condition _schiffGegenUhrzeigersinnArrives = _lock.newCondition();
 	private Condition _schiffGegenUhrzeigersinnLeaves = _lock.newCondition();
-	private Condition _schiffGegenUhrzeigersinnPassengers = _lock.newCondition();
-	
 	private Condition _schiffNachEgalArrives = _lock.newCondition();
-	private Condition _schiffNachEgalPassengers = _lock.newCondition();
 	
 	private int _id;
 	private int _maxAnzahlSchiffeAnHaltestelle;
@@ -51,9 +47,7 @@ public class Landing {
 			getSchiffList(null).add(schiff);
 			
 			getArriveCondition(schiff.getRichtung()).signalAll();
-			getPassengersCondition(schiff.getRichtung()).signalAll();
 			getArriveCondition(null).signalAll();
-			getPassengersCondition(null).signalAll();
 		} finally {
 			_lock.unlock();
 		}
@@ -90,7 +84,7 @@ public class Landing {
 					}
 				}
 				
-				getPassengersCondition(richtung).await();
+				getArriveCondition(richtung).await();
 			}
 		} finally {
 			_lock.unlock();
@@ -103,8 +97,8 @@ public class Landing {
 			
 			schiff.verlassen(schlumpf);
 			
-			getPassengersCondition(schiff.getRichtung()).signal();
-			getPassengersCondition(null).signal();
+			getArriveCondition(schiff.getRichtung()).signal();
+			getArriveCondition(null).signal();
 		} finally {
 			_lock.unlock();
 		}
@@ -126,13 +120,6 @@ public class Landing {
 			return _schiffNachEgalArrives;
 		}
 		return Richtung.IM_UHRZEIGERSINN.equals(richtung) ? _schiffImUhrzeigersinnArrives : _schiffGegenUhrzeigersinnArrives;
-	}
-	
-	private Condition getPassengersCondition(Richtung richtung) {
-		if(richtung == null) {
-			return _schiffNachEgalPassengers;
-		}
-		return Richtung.IM_UHRZEIGERSINN.equals(richtung) ? _schiffImUhrzeigersinnPassengers : _schiffGegenUhrzeigersinnPassengers;
 	}
 	
 	@Override
