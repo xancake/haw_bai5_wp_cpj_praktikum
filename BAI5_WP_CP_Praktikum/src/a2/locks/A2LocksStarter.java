@@ -54,8 +54,8 @@ public class A2LocksStarter extends TestAndEnvironment_A {
 		}
 	}
 	
-	public static final boolean DEBUG_SMURF = true;
-	public static final boolean DEBUG_BUS   = true;
+	public static final boolean DEBUG_SMURF = false;
+	public static final boolean DEBUG_BUS   = false;
 	
 	@Override
 	public Integer getWantedNumberOfSmurfs() {
