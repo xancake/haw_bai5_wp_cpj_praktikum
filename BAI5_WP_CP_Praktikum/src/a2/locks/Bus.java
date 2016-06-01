@@ -87,6 +87,7 @@ public class Bus extends Bus_A implements Runnable {
 		}
 	}
 	
+
 	public boolean tryEnterBus(Smurf smurf) {
 		try {
 			_lock.lock();
