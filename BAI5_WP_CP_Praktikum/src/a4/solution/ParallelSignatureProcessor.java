@@ -1,6 +1,7 @@
 package a4.solution;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,14 +18,16 @@ import a4.api.Item_I;
 import a4.api.SignatureProcessor_I;
 
 public class ParallelSignatureProcessor implements SignatureProcessor_I {
+	private boolean _recursive;
 	private List<Long> _polinome;
 
-	public ParallelSignatureProcessor(Long... polinome) {
-		this(Arrays.asList(polinome));
+	public ParallelSignatureProcessor(boolean recursive, Long... polinome) {
+		this(recursive, Arrays.asList(polinome));
 	}
 
-	public ParallelSignatureProcessor(List<Long> polinome) {
+	public ParallelSignatureProcessor(boolean recursive, List<Long> polinome) {
 		_polinome = Objects.requireNonNull(polinome);
+		_recursive = recursive;
 	}
 
 	@Override
@@ -35,20 +38,15 @@ public class ParallelSignatureProcessor implements SignatureProcessor_I {
 				directory = new File(ClassLoader.getSystemResource(pathToRelatedFiles).toURI());
 			}
 			
-			if (!directory.exists() || !directory.isDirectory()) {
+			if (!directory.exists()) {
 				throw new IllegalArgumentException(String.format("INVALID path: %s\n", pathToRelatedFiles));
 			}
-	
+			
 			int availableProcessors = Runtime.getRuntime().availableProcessors();
-			System.out.println("Available Processors: " + availableProcessors);
 			ExecutorService executorService = Executors.newFixedThreadPool(availableProcessors);
-	
-			File[] filesOfDirectory = directory.listFiles((dir, name) -> name.matches(filter));
-			List<Future<Item_I>> futures = new LinkedList<>();
-			for(File file : filesOfDirectory) {
-				Future<Item_I> future = executorService.submit(new SignatureTask(file, _polinome));
-				futures.add(future);
-			}
+			System.out.println("Threadpool mit maximal " + availableProcessors + " Threads gestartet");
+			
+			Collection<Future<Item_I>> futures = verarbeite(directory, executorService, (file) -> (_recursive && file.isDirectory()) || file.getName().matches(filter));
 			
 			executorService.shutdown();
 			while(!executorService.awaitTermination(1, TimeUnit.MINUTES)) {
@@ -72,5 +70,18 @@ public class ParallelSignatureProcessor implements SignatureProcessor_I {
 			// e.printStackTrace();
 			throw new RuntimeException(e);
 		}
+	}
+	
+	private Collection<Future<Item_I>> verarbeite(File path, ExecutorService executorService, FileFilter filter) {
+		Collection<Future<Item_I>> futures = new LinkedList<>();
+		if(path.isFile()) {
+			futures.add(executorService.submit(new SignatureTask(path, _polinome)));
+		} else {
+			File[] filesOfDirectory = path.listFiles(filter);
+			for(File file : filesOfDirectory) {
+				futures.addAll(verarbeite(file, executorService, filter));
+			}
+		}
+		return futures;
 	}
 }

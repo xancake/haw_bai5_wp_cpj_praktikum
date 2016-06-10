@@ -42,8 +42,13 @@ public class SignatureTask implements Callable<Item_I> {
 			signatures[i] = (int)temp[i];
 		}
 		
-		return new Item(_file.getName(), _file.length(), signatures);
-
+		return new Item(_file.getAbsolutePath(), _file.length(), signatures);
+	}
+	
+	
+	// Alter Ansatz, vielleicht brauchen wir den nochmal, da der näher an der Lösung von Herrn Schäfers ist.
+//	@Override
+//	public Item_I call() throws Exception {
 //		final long fileSize = _file.length();
 //		long bytesToCompute = (7 + fileSize) & ~0b11L;
 //		bytesToCompute = (bytesToCompute/12 + (bytesToCompute%12 > 0 ? 1 : 0 )) * 12;
@@ -67,23 +72,23 @@ public class SignatureTask implements Callable<Item_I> {
 //		}
 //		
 //		return new Item(_file.getName(), fileSize, signatures);
-	}
-	
-	private int computeCheckSum(int checksum, long polinom, byte[] buffer, int start, int bytes) {
-        for(int bufferIndex=start; bufferIndex<bytes; bufferIndex++) {
-            
-            // put next byte at end (according to our "signature thinking" the least significant position)
-            checksum |= ((0xffL & buffer[bufferIndex]) << 32);
-            
-            // handle current byte
-            for(int bitPosition=0;  bitPosition<8;  bitPosition++) {
-                if(0b1 == (0b1 & checksum)) {
-                    // MSB of checksum is set
-                	checksum ^= polinom;
-                }
-                checksum = checksum >>> 1;
-            }
-        }
-		return checksum;
-	}
+//	}
+//	
+//	private int computeCheckSum(int checksum, long polinom, byte[] buffer, int start, int bytes) {
+//        for(int bufferIndex=start; bufferIndex<bytes; bufferIndex++) {
+//            
+//            // put next byte at end (according to our "signature thinking" the least significant position)
+//            checksum |= ((0xffL & buffer[bufferIndex]) << 32);
+//            
+//            // handle current byte
+//            for(int bitPosition=0;  bitPosition<8;  bitPosition++) {
+//                if(0b1 == (0b1 & checksum)) {
+//                    // MSB of checksum is set
+//                	checksum ^= polinom;
+//                }
+//                checksum = checksum >>> 1;
+//            }
+//        }
+//		return checksum;
+//	}
 }
