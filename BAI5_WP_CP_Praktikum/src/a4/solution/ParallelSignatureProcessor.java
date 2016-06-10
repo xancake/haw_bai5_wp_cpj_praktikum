@@ -30,7 +30,11 @@ public class ParallelSignatureProcessor implements SignatureProcessor_I {
 	@Override
 	public Collection<Item_I> computeSignatures(String pathToRelatedFiles, String filter) {
 		try {
-			final File directory = new File(ClassLoader.getSystemResource(pathToRelatedFiles).toURI());
+			File directory = new File(pathToRelatedFiles);
+			if(!directory.isAbsolute()) {
+				directory = new File(ClassLoader.getSystemResource(pathToRelatedFiles).toURI());
+			}
+			
 			if (!directory.exists() || !directory.isDirectory()) {
 				throw new IllegalArgumentException(String.format("INVALID path: %s\n", pathToRelatedFiles));
 			}
