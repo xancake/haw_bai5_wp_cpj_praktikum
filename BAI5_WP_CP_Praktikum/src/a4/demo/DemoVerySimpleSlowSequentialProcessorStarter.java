@@ -30,7 +30,7 @@ public class DemoVerySimpleSlowSequentialProcessorStarter {
         final String path2TestPic1byte = "C:\\TRIAL\\TestPics\\testPic0xCD.jpg";
         final String path2TestPic2byte = "C:\\TRIAL\\TestPics\\testPic0xE3C7.jpg";
         final String path2TestPic3byte = "C:\\TRIAL\\TestPics\\testPic0xA2C37E.jpg";
-        final String path2TestPic4byte = "Z:\\git\\haw_bai5_wp_cp_ln\\BAI5_WP_CP_Praktikum\\res\\img\\wallpaper1.jpg";
+        final String path2TestPic4byte = "Z:\\git\\haw_bai5_wp_cp_ln\\BAI5_WP_CP_Praktikum\\res\\img\\6byte.txt";
         final String path2TestPic5byte = "C:\\TRIAL\\TestPics\\testPic0x0123456789.jpg";
         final String path2TestPic6byte = "C:\\TRIAL\\TestPics\\testPic0xABCDEFABCDEF.jpg";
         final String path2TestPic7byte = "C:\\TRIAL\\TestPics\\testPic0x00000000000000.jpg";

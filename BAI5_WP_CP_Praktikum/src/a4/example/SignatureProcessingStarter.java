@@ -2,7 +2,10 @@ package a4.example;
 
 
 import java.util.Collection;
-
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import a4.api.Item;
 import a4.api.Item_I;
 import a4.api.SignatureProcessor_I;
 
@@ -24,7 +27,7 @@ public class SignatureProcessingStarter {
         final Collection<Item_I> signatureList =
             sp.computeSignatures(
                 pathToRelatedFiles,
-                filter
+                ".*\\.([Tt][Xx][Tt])$"//filter
             );
         final long timeFinished = System.nanoTime();
         
@@ -32,7 +35,10 @@ public class SignatureProcessingStarter {
         System.out.printf( "\n" );
         System.out.printf( "1000000af 100400007 104c11db7 127673637 __file_size | file_name...\n" );
         System.out.printf( "-vvvvvvvv--vvvvvvvv--vvvvvvvv--vvvvvvvv-------------+----------~~~\n" );
-        for( final Item_I elem : signatureList ){
+        
+        List<Item_I> items = new LinkedList<Item_I>(signatureList);
+        Collections.sort(items, (item1, item2) -> item1.getFileName().compareTo(item2.getFileName()));
+        for( final Item_I elem : items ){
             System.out.printf(
                 " %08x  %08x  %08x  %08x%12d : %s\n",
                 elem.getSignature( 0 ),
