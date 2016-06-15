@@ -23,8 +23,8 @@ public class SignatureTask implements Callable<Item_I> {
 		final int[] signatures = new int[_polinome.size()];
 		final long[] temp = new long[_polinome.size()];
 		
-		int polinomLaenge = Utility.numberOfBitsNeededForCoding(_polinome.get(0));
-		try(final Message message = new Message(new FileInputStream(_file), polinomLaenge-1)) {
+		int extraBytes = (Utility.numberOfBitsNeededForCoding(_polinome.get(0))-1)/8;
+		try(final Message message = new Message(new FileInputStream(_file), extraBytes)) {
 			while(message.hasNextBit()) {
 				long bit = message.getNextBit();
 				long bitNachVorn = (bit << 32);
@@ -44,51 +44,4 @@ public class SignatureTask implements Callable<Item_I> {
 		
 		return new Item(_file.getAbsolutePath(), _file.length(), signatures);
 	}
-	
-	
-	// Alter Ansatz, vielleicht brauchen wir den nochmal, da der näher an der Lösung von Herrn Schäfers ist.
-//	@Override
-//	public Item_I call() throws Exception {
-//		final long fileSize = _file.length();
-//		long bytesToCompute = (7 + fileSize) & ~0b11L;
-//		bytesToCompute = (bytesToCompute/12 + (bytesToCompute%12 > 0 ? 1 : 0 )) * 12;
-//		
-//		final int[] signatures = new int[_polinome.size()];
-//		
-//		try(final BufferedInputStream in = new BufferedInputStream(new FileInputStream(_file))) {
-//			byte[] buffer = new byte[1];
-//			int bytesRead;
-//			while((bytesRead = in.read(buffer)) != -1) {
-//				for(int i=0; i<_polinome.size(); i++) {
-//					signatures[i] = computeCheckSum(signatures[i], _polinome.get(i), buffer, 0, bytesRead);
-//				}
-//			}
-//			
-//			for(int i=0; i<_polinome.size(); i++) {
-//				long polinom = _polinome.get(i);
-//				int bytesNeeded = Utility.numberOfBitsNeededForCoding(polinom);
-//				signatures[i] = computeCheckSum(signatures[i], polinom, new byte[bytesNeeded], 0, bytesNeeded);
-//			}
-//		}
-//		
-//		return new Item(_file.getName(), fileSize, signatures);
-//	}
-//	
-//	private int computeCheckSum(int checksum, long polinom, byte[] buffer, int start, int bytes) {
-//        for(int bufferIndex=start; bufferIndex<bytes; bufferIndex++) {
-//            
-//            // put next byte at end (according to our "signature thinking" the least significant position)
-//            checksum |= ((0xffL & buffer[bufferIndex]) << 32);
-//            
-//            // handle current byte
-//            for(int bitPosition=0;  bitPosition<8;  bitPosition++) {
-//                if(0b1 == (0b1 & checksum)) {
-//                    // MSB of checksum is set
-//                	checksum ^= polinom;
-//                }
-//                checksum = checksum >>> 1;
-//            }
-//        }
-//		return checksum;
-//	}
 }

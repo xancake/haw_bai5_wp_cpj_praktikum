@@ -161,6 +161,7 @@ public class DemoVerySimpleSlowSequentialProcessor {
     private void handleChunk( final byte[] buffer,  final int numberOfBytes,  final int startPosition ){
         //
         for( int bufferIndex=startPosition; bufferIndex<numberOfBytes; bufferIndex++ ){
+        	System.out.printf("Checksum: %8x, Verarbeite: %4x", cs, buffer[bufferIndex]);
             
             // put next byte at end (according to our "signature thinking" the least significant position)
             cs |= ((0xffL & buffer[bufferIndex]) << 32);
@@ -174,6 +175,8 @@ public class DemoVerySimpleSlowSequentialProcessor {
                 }//if
                 cs = cs >>> 1;
             }//for
+            
+            System.out.printf(", Result Checksum: %8x%n", cs);
         }//for
         //
         // ATTENTION: the "last 4 byte" are not fully computed yet  (at least related to numberOfBytes)

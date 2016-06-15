@@ -75,7 +75,7 @@ public class ParallelSignatureProcessor implements SignatureProcessor_I {
 	private Collection<Future<Item_I>> verarbeite(File path, ExecutorService executorService, FileFilter filter) {
 		Collection<Future<Item_I>> futures = new LinkedList<>();
 		if(path.isFile()) {
-			futures.add(executorService.submit(new SignatureTask(path, _polinome)));
+			futures.add(executorService.submit(new CRCTask(path, _polinome)));
 		} else {
 			File[] filesOfDirectory = path.listFiles(filter);
 			for(File file : filesOfDirectory) {
