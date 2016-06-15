@@ -24,11 +24,7 @@ public class SignatureProcessingStarter {
         final SignatureProcessor_I sp = new SignatureProcessor();
         
         final long timeStarted = System.nanoTime();
-        final Collection<Item_I> signatureList =
-            sp.computeSignatures(
-                pathToRelatedFiles,
-                ".*\\.([Tt][Xx][Tt])$"//filter
-            );
+        final Collection<Item_I> signatureList = sp.computeSignatures(SOURCE_FOLDER, FILTER_TEXT);
         final long timeFinished = System.nanoTime();
         
         System.out.printf( "After %s:\n", Utility.nanoSecondBasedTimeToString( timeFinished - timeStarted ));
@@ -51,11 +47,8 @@ public class SignatureProcessingStarter {
         }//for
     }//method()
     
-    
-    
-    
-    
-    final static String pathToRelatedFiles = "Z:\\git\\haw_bai5_wp_cp_ln\\BAI5_WP_CP_Praktikum\\res\\img";             // path to the related files
-    final static String filter = ".*\\.(J|j)(P|p)(E|e)?(G|g)$";                 // filter resp. regex e.g. ".*\\.(J|j)(P|p)(E|e)?(G|g)$"
+    private static final String SOURCE_FOLDER = "Z:\\git\\haw_bai5_wp_cp_ln\\BAI5_WP_CP_Praktikum\\res\\img";
+    private static final String FILTER_JPEG   = ".*\\.(J|j)(P|p)(E|e)?(G|g)$";
+	private static final String FILTER_TEXT   = ".*\\.([Tt][Xx][Tt])$";
     
 }//class
