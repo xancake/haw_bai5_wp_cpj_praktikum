@@ -29,7 +29,7 @@ public class CRCTask implements Callable<Item_I> {
 		}
 		
 		try(final BufferedInputStream in = new BufferedInputStream(new FileInputStream(_file))) {
-			byte[] buffer = new byte[4];
+			byte[] buffer = new byte[1024];
 			int bytesRead;
 			
 			while((bytesRead = in.read(buffer)) != -1) {

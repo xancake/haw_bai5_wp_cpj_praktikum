@@ -24,7 +24,7 @@ public class SignatureProcessingStarter {
         final SignatureProcessor_I sp = new SignatureProcessor();
         
         final long timeStarted = System.nanoTime();
-        final Collection<Item_I> signatureList = sp.computeSignatures(SOURCE_FOLDER, FILTER_TEXT);
+        final Collection<Item_I> signatureList = sp.computeSignatures(SOURCE_FOLDER, FILTER_JPEG);
         final long timeFinished = System.nanoTime();
         
         System.out.printf( "After %s:\n", Utility.nanoSecondBasedTimeToString( timeFinished - timeStarted ));

@@ -9,7 +9,8 @@ import a4.api.SignatureProcessor_I;
 import a4.example.Utility;
 
 public class A4Starter {
-	private static final String SOURCE_FOLDER = "img";
+	private static final String SOURCE_FOLDER = "img"; 
+	private static final String FILTER_ALL    = ".*$";
 	private static final String FILTER_IMAGE  = ".*\\.(([Jj][Pp][Ee]?[Gg])|([Pp][Nn][Gg]))$";
 	private static final String FILTER_TEXT   = ".*\\.([Tt][Xx][Tt])$";
 	
@@ -19,7 +20,7 @@ public class A4Starter {
 		SignatureProcessor_I processor = new ParallelSignatureProcessor(true, POLINOMIALS);
 		
 		final long timeStarted = System.nanoTime();
-		Collection<Item_I> items = processor.computeSignatures(SOURCE_FOLDER, FILTER_TEXT);
+		Collection<Item_I> items = processor.computeSignatures(SOURCE_FOLDER, FILTER_IMAGE);
 		final long timeFinished = System.nanoTime();
 		
 		System.out.printf("\nCompleted after %s:\n", Utility.nanoSecondBasedTimeToString(timeFinished - timeStarted));
