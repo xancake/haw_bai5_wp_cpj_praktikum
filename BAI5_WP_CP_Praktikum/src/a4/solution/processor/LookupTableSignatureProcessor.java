@@ -14,11 +14,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.Checksum;
 
 import a4.api.Item_I;
 import a4.api.SignatureProcessor_I;
 import a4.solution.LookupTable;
-import a4.solution.tasks.CRCLookupTask;
+import a4.solution.LookupTableChecksum;
+import a4.solution.tasks.CRCTask;
 
 public class LookupTableSignatureProcessor implements SignatureProcessor_I {
 	private boolean _recursive;
@@ -128,7 +130,11 @@ public class LookupTableSignatureProcessor implements SignatureProcessor_I {
 	private Collection<Future<Item_I>> verarbeite(File path, ExecutorService executorService, List<LookupTable> lookupTables, FileFilter filter) {
 		Collection<Future<Item_I>> futures = new LinkedList<>();
 		if(path.isFile()) {
-			futures.add(executorService.submit(new CRCLookupTask(path, lookupTables)));
+			List<Checksum> checksums = new LinkedList<Checksum>();
+			for(int i=0; i<lookupTables.size(); i++) {
+				checksums.add(new LookupTableChecksum(lookupTables.get(i)));
+			}
+			futures.add(executorService.submit(new CRCTask(path, _polinome, checksums)));
 		} else {
 			File[] filesOfDirectory = path.listFiles(filter);
 			for(File file : filesOfDirectory) {

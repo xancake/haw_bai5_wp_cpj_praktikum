@@ -13,9 +13,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.Checksum;
 
 import a4.api.Item_I;
 import a4.api.SignatureProcessor_I;
+import a4.solution.SchaefersChecksum;
 import a4.solution.tasks.CRCTask;
 
 public class ParallelSignatureProcessor implements SignatureProcessor_I {
@@ -90,7 +92,11 @@ public class ParallelSignatureProcessor implements SignatureProcessor_I {
 	private Collection<Future<Item_I>> verarbeite(File path, ExecutorService executorService, FileFilter filter) {
 		Collection<Future<Item_I>> futures = new LinkedList<>();
 		if(path.isFile()) {
-			futures.add(executorService.submit(new CRCTask(path, _polinome)));
+			List<Checksum> checksums = new LinkedList<Checksum>();
+			for(int i=0; i<_polinome.size(); i++) {
+				checksums.add(new SchaefersChecksum(_polinome.get(i)));
+			}
+			futures.add(executorService.submit(new CRCTask(path, _polinome, checksums)));
 		} else {
 			File[] filesOfDirectory = path.listFiles(filter);
 			for(File file : filesOfDirectory) {

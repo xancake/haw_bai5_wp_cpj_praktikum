@@ -3,7 +3,6 @@ package a4.solution.tasks;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
@@ -12,24 +11,24 @@ import java.util.zip.Checksum;
 import a4.api.Item;
 import a4.api.Item_I;
 import a4.example.Utility;
-import a4.solution.SchaefersChecksum;
 
 public class CRCTask implements Callable<Item_I> {
 	private File _file;
 	private List<Long> _polinome;
+	private List<Checksum> _checksums;
 	
-	public CRCTask(File file, List<Long> polinome) {
+	public CRCTask(File file, List<Long> polinome, List<Checksum> initialChecksums) {
+		if(polinome.size() != initialChecksums.size()) {
+			throw new IllegalArgumentException("Es müssen genauso viele Checksums vorgegeben werden wie Polinome.");
+		}
+		
 		_file = Objects.requireNonNull(file);
 		_polinome = Objects.requireNonNull(polinome);
+		_checksums = Objects.requireNonNull(initialChecksums);
 	}
 	
 	@Override
 	public Item_I call() throws Exception {
-		List<Checksum> checksums = new LinkedList<>();
-		for(Long polinom : _polinome) {
-			checksums.add(new SchaefersChecksum(polinom));
-		}
-		
 		// Realen Inhalt der Datei verarbeiten
 		try(final BufferedInputStream in = new BufferedInputStream(new FileInputStream(_file))) {
 			byte[] buffer = new byte[1024];
@@ -37,7 +36,7 @@ public class CRCTask implements Callable<Item_I> {
 			
 			while((bytesRead = in.read(buffer)) != -1) {
 				for(int i=0; i<_polinome.size(); i++) {
-					checksums.get(i).update(buffer, 0, bytesRead);
+					_checksums.get(i).update(buffer, 0, bytesRead);
 				}
 			}
 		}
@@ -49,13 +48,13 @@ public class CRCTask implements Callable<Item_I> {
 			// Extra Bytes Needed muss ein vielfaches von 12 sein, damit die Vergleichbarkeit mit
 			// Lookuptables der Länge 1, 2, 3 und 4 Byte ermöglicht wird (kleinster gemeinsamer Nenner)
 			int extraBytesNeeded = bytesNeeded + (int)(12-messageLength%12);
-			checksums.get(i).update(new byte[extraBytesNeeded], 0, extraBytesNeeded);
+			_checksums.get(i).update(new byte[extraBytesNeeded], 0, extraBytesNeeded);
 		}
 		
 		// Checksummen holen
-		int[] signatures = new int[checksums.size()];
-		for(int i=0; i<checksums.size(); i++) {
-			signatures[i] = (int)checksums.get(i).getValue();
+		int[] signatures = new int[_checksums.size()];
+		for(int i=0; i<_checksums.size(); i++) {
+			signatures[i] = (int)_checksums.get(i).getValue();
 		}
 		
 		return new Item(_file.getName(), _file.length(), signatures);
