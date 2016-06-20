@@ -51,12 +51,14 @@ public class CRCTask implements Callable<Item_I> {
 			_checksums.get(i).update(new byte[extraBytesNeeded], 0, extraBytesNeeded);
 		}
 		
-		// Checksummen holen
-		int[] signatures = new int[_checksums.size()];
-		for(int i=0; i<_checksums.size(); i++) {
-			signatures[i] = (int)_checksums.get(i).getValue();
+		return new Item(_file.getName(), _file.length(), fetchSignatures(_checksums));
+	}
+	
+	private static int[] fetchSignatures(List<Checksum> checksums) {
+		int[] signatures = new int[checksums.size()];
+		for(int i=0; i<checksums.size(); i++) {
+			signatures[i] = (int)checksums.get(i).getValue();
 		}
-		
-		return new Item(_file.getName(), _file.length(), signatures);
+		return signatures;
 	}
 }
