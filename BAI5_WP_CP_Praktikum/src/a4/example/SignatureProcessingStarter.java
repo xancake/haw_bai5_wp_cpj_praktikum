@@ -24,7 +24,7 @@ public class SignatureProcessingStarter {
         final SignatureProcessor_I sp = new SignatureProcessor();
         
         final long timeStarted = System.nanoTime();
-        final Collection<Item_I> signatureList = sp.computeSignatures(SOURCE_FOLDER, FILTER_JPEG);
+        final Collection<Item_I> signatureList = sp.computeSignatures(SOURCE_FOLDER, FILTER_IMAGE);
         final long timeFinished = System.nanoTime();
         
         System.out.printf( "After %s:\n", Utility.nanoSecondBasedTimeToString( timeFinished - timeStarted ));
@@ -48,7 +48,7 @@ public class SignatureProcessingStarter {
     }//method()
     
     private static final String SOURCE_FOLDER = "img";
-    private static final String FILTER_JPEG   = ".*\\.(J|j)(P|p)(E|e)?(G|g)$";
+    private static final String FILTER_IMAGE  = ".*\\.(J|j)(P|p)(E|e)?(G|g)$";
 	private static final String FILTER_TEXT   = ".*\\.([Tt][Xx][Tt])$";
     
 }//class

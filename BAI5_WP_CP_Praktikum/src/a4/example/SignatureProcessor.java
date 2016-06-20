@@ -2,10 +2,10 @@ package a4.example;
 
 
 import java.io.File;
+import java.io.FileFilter;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.regex.Pattern;
+import java.util.LinkedList;
 
 import a4.api.Item;
 import a4.api.Item_I;
@@ -27,16 +27,16 @@ public class SignatureProcessor implements SignatureProcessor_I {
         final String pathToRelatedFiles,
         final String filter
     ){
-		File theDirectory = new File(pathToRelatedFiles);
-		if(!theDirectory.isAbsolute()) {
+		File path = new File(pathToRelatedFiles);
+		if(!path.isAbsolute()) {
 			// Versuch die Pfadangabe relativ vom Klassenpfad aufzulösen, falls es sich um eine relative Pfadangabe handelt
 			try {
-				theDirectory = new File(ClassLoader.getSystemResource(pathToRelatedFiles).toURI());
+				path = new File(ClassLoader.getSystemResource(pathToRelatedFiles).toURI());
 			} catch (URISyntaxException ignore) {}
 		}
 		
         // do selfchecks
-        if( ( ! theDirectory.exists())  ||  (! theDirectory.isDirectory()) ){
+        if( ( ! path.exists())  ||  (! path.isDirectory()) ){
             throw new IllegalArgumentException(
                 String.format(
                     "INVALID path: %s\n",
@@ -45,20 +45,25 @@ public class SignatureProcessor implements SignatureProcessor_I {
             );
         }//if
         
-        
-        final Collection<Item_I> coll = new ArrayList<>();
-        final DemoAndReferenceProcessor drp = new DemoAndReferenceProcessor();
-        
-        
-        for ( final File file : theDirectory.listFiles() ){
-            final String fileName = file.getName();
-            if( Pattern.matches( filter, fileName ) ){
-                coll.add( new Item( fileName,  file.length(),  drp.computeSignatures( file )));
-            }//if
-        }//for
-        
-        return coll;
+        return verarbeite(
+        		path,
+        		new DemoAndReferenceProcessor(),
+        		(file) -> file.isDirectory() || file.getName().matches(filter)
+        );
     }//method()
+    
+	private Collection<Item_I> verarbeite(File path, DemoAndReferenceProcessor processor, FileFilter filter) {
+		Collection<Item_I> futures = new LinkedList<>();
+		if(path.isFile()) {
+			futures.add(new Item(path.getName(), path.length(), processor.computeSignatures(path)));
+		} else {
+			File[] filesOfDirectory = path.listFiles(filter);
+			for(File file : filesOfDirectory) {
+				futures.addAll(verarbeite(file, processor, filter));
+			}
+		}
+		return futures;
+	}
     
     
     
