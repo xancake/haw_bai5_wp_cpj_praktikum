@@ -36,7 +36,7 @@ public class SignatureProcessor implements SignatureProcessor_I {
 		}
 		
         // do selfchecks
-        if( ( ! path.exists())  ||  (! path.isDirectory()) ){
+        if( ( ! path.exists()) ){
             throw new IllegalArgumentException(
                 String.format(
                     "INVALID path: %s\n",
