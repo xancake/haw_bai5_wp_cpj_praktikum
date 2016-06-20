@@ -1,4 +1,4 @@
-package a4.solution;
+package a4.solution.tasks;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -13,9 +13,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.zip.Checksum;
+
 import a4.api.Item;
 import a4.api.Item_I;
 import a4.example.Utility;
+import a4.solution.SchaefersChecksum;
 
 public class CRCSplitTask implements Callable<Item_I> {
 	private File _file;

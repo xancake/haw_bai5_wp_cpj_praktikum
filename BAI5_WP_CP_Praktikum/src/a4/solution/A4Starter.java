@@ -4,9 +4,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
 import a4.api.Item_I;
 import a4.api.SignatureProcessor_I;
 import a4.example.Utility;
+import a4.solution.processor.ParallelSignatureProcessor;
 
 public class A4Starter {
 	private static final String SOURCE_FOLDER = "img"; 

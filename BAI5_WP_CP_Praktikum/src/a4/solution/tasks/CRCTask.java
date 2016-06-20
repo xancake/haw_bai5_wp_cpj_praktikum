@@ -1,4 +1,4 @@
-package a4.solution;
+package a4.solution.tasks;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.zip.Checksum;
+
 import a4.api.Item;
 import a4.api.Item_I;
 import a4.example.Utility;
+import a4.solution.SchaefersChecksum;
 
 public class CRCTask implements Callable<Item_I> {
 	private File _file;

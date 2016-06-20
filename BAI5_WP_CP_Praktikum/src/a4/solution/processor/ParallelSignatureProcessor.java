@@ -1,4 +1,4 @@
-package a4.solution;
+package a4.solution.processor;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 import a4.api.Item_I;
 import a4.api.SignatureProcessor_I;
+import a4.solution.tasks.CRCTask;
 
 public class ParallelSignatureProcessor implements SignatureProcessor_I {
 	private boolean _recursive;
