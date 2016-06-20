@@ -33,6 +33,7 @@ public class CRCSplitTask implements Callable<Item_I> {
 			holders.add(new Holder(polinom, new SchaefersChecksum(polinom), Executors.newSingleThreadExecutor()));
 		}
 		
+		// Realen Inhalt der Datei verarbeiten
 		try(final BufferedInputStream in = new BufferedInputStream(new FileInputStream(_file))) {
 			byte[] buffer = new byte[1024];
 			int bytesRead;

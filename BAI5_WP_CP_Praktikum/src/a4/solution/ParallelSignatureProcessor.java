@@ -33,26 +33,31 @@ public class ParallelSignatureProcessor implements SignatureProcessor_I {
 	@Override
 	public Collection<Item_I> computeSignatures(String pathToRelatedFiles, String filter) {
 		try {
-			File directory = new File(pathToRelatedFiles);
-			if(!directory.isAbsolute()) {
-				directory = new File(ClassLoader.getSystemResource(pathToRelatedFiles).toURI());
+			File path = new File(pathToRelatedFiles);
+			if(!path.isAbsolute()) {
+				// Versuch die Pfadangabe relativ vom Klassenpfad aufzulösen, falls es sich um eine relative Pfadangabe handelt
+				path = new File(ClassLoader.getSystemResource(pathToRelatedFiles).toURI());
 			}
 			
-			if (!directory.exists()) {
+			if (!path.exists()) {
 				throw new IllegalArgumentException(String.format("INVALID path: %s\n", pathToRelatedFiles));
 			}
 			
+			// Aufsetzen des Thread-Pools
 			int availableProcessors = Runtime.getRuntime().availableProcessors();
 			ExecutorService executorService = Executors.newFixedThreadPool(availableProcessors);
 			System.out.println("Threadpool mit maximal " + availableProcessors + " Threads gestartet");
 			
-			Collection<Future<Item_I>> futures = verarbeite(directory, executorService, (file) -> (_recursive && file.isDirectory()) || file.getName().matches(filter));
+			// Starten der Verarbeitung und Aufgeben der Tasks
+			Collection<Future<Item_I>> futures = verarbeite(path, executorService, (file) -> (_recursive && file.isDirectory()) || file.getName().matches(filter));
 			
+			// Beenden des Thread-Pools
 			executorService.shutdown();
 			while(!executorService.awaitTermination(1, TimeUnit.MINUTES)) {
 				System.out.println("Thread-Pool noch nicht beendet, wir warten weiter...");
 			}
 			
+			// Sammeln der Ergebnisse
 			Collection<Item_I> items = new LinkedList<>();
 			for(Future<Item_I> future : futures) {
 				items.add(future.get());
@@ -63,15 +68,24 @@ public class ParallelSignatureProcessor implements SignatureProcessor_I {
 			throw new RuntimeException(e);
 		} catch (ExecutionException e) {
 			// TODO: überlegen, was sinnvoll wäre
-			// e.printStackTrace();
 			throw new RuntimeException(e);
 		} catch (URISyntaxException e) {
-			// TODO: überlegen, was sinnvoll wäre
-			// e.printStackTrace();
+			// Sollte nicht auftreten können, da der ClassLoader bereits 'null' zurückgibt,
+			// falls es keine Datei zu dem Pfad gibt (was auch auf ungültige Pfadangaben zutreffen sollte).
+			// Exception aber trotzdem werfen, damit nichts verschluckt wird 
 			throw new RuntimeException(e);
 		}
 	}
 	
+	/**
+	 * Verarbeitet den übergebenen Pfad. Handelt es sich bei dem Pfad um eine Datei wird dafür ein CRC-Berechnungstask
+	 * an dem übergebenen {@link ExecutorService} aufgegeben. Handelt es sich um ein Verzeichnis wird diese Methode
+	 * rekursiv für alle Pfade unter diesem Pfad aufgerufen, die dem übergebenen {@link FileFilter} entsprechen.
+	 * @param path Der zu verarbeitende Pfad
+	 * @param executorService Der {@link ExecutorService}
+	 * @param filter Der {@link FileFilter}
+	 * @return Eine Collection aller {@link Future}-Objekte der Tasks, die dem {@link ExecutorService} aufgegeben wurden
+	 */
 	private Collection<Future<Item_I>> verarbeite(File path, ExecutorService executorService, FileFilter filter) {
 		Collection<Future<Item_I>> futures = new LinkedList<>();
 		if(path.isFile()) {

@@ -28,6 +28,7 @@ public class CRCTask implements Callable<Item_I> {
 			checksums.add(new SchaefersChecksum(polinom));
 		}
 		
+		// Realen Inhalt der Datei verarbeiten
 		try(final BufferedInputStream in = new BufferedInputStream(new FileInputStream(_file))) {
 			byte[] buffer = new byte[1024];
 			int bytesRead;
@@ -43,8 +44,8 @@ public class CRCTask implements Callable<Item_I> {
 		for(int i=0; i<_polinome.size(); i++) {
 			int bytesNeeded = (Utility.numberOfBitsNeededForCoding(_polinome.get(i))-1)/8;
 			long messageLength = _file.length() + bytesNeeded;
-			// Extra Bytes Needed muss ein vielfaches von 12 sein, damit die Vergleichbarkeit
-			// mit Lookuptables der Länge 1, 2, 3 und 4 Byte ermöglicht wird
+			// Extra Bytes Needed muss ein vielfaches von 12 sein, damit die Vergleichbarkeit mit
+			// Lookuptables der Länge 1, 2, 3 und 4 Byte ermöglicht wird (kleinster gemeinsamer Nenner)
 			int extraBytesNeeded = bytesNeeded + (int)(12-messageLength%12);
 			checksums.get(i).update(new byte[extraBytesNeeded], 0, extraBytesNeeded);
 		}
