@@ -51,7 +51,7 @@ public class CRCSplitTask implements Callable<Item_I> {
 		// Nullen ranhängen, damit die Datei wirklich komplett verarbeitet wurde
 		List<Future<Long>> ergebnisse = new ArrayList<>();
 		for(Holder holder : holders) {
-			int bytesNeeded = (Utility.numberOfBitsNeededForCoding(holder._polinom)-1)/8;
+			int bytesNeeded = (Utility.numberOfBitsNeededForCoding(holder._polinom)-1)/8; // durch 8, um bits in bytes umzurechnen
 			long messageLength = _file.length() + bytesNeeded;
 			// Extra Bytes Needed muss ein vielfaches von 12 sein, damit die Vergleichbarkeit
 			// mit Lookuptables der Länge 1, 2, 3 und 4 Byte ermöglicht wird

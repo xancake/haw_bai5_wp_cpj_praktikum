@@ -8,6 +8,7 @@ import java.util.List;
 import a4.api.Item_I;
 import a4.api.SignatureProcessor_I;
 import a4.example.Utility;
+import a4.solution.processor.LookupTableSignatureProcessor;
 import a4.solution.processor.ParallelSignatureProcessor;
 
 public class A4Starter {
@@ -26,7 +27,9 @@ public class A4Starter {
 			default: printUsage(); return;
 		}
 		
-		measure(new ParallelSignatureProcessor(true, POLINOMIALS), sourceFolder, FILTER_IMAGE, POLINOMIALS);
+//		SignatureProcessor_I processor = new ParallelSignatureProcessor(true, POLINOMIALS);
+		SignatureProcessor_I processor = new LookupTableSignatureProcessor(true, POLINOMIALS);
+		measure(processor, sourceFolder, FILTER_TEXT, POLINOMIALS);
 	}
 	
 	private static void printUsage() {

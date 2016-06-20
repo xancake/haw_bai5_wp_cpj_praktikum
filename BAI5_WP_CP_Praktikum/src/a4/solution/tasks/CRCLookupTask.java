@@ -12,22 +12,23 @@ import java.util.zip.Checksum;
 import a4.api.Item;
 import a4.api.Item_I;
 import a4.example.Utility;
-import a4.solution.SchaefersChecksum;
+import a4.solution.LookupTable;
+import a4.solution.LookupTableChecksum;
 
-public class CRCTask implements Callable<Item_I> {
+public class CRCLookupTask implements Callable<Item_I> {
 	private File _file;
-	private List<Long> _polinome;
+	private List<LookupTable> _lookupTables;
 	
-	public CRCTask(File file, List<Long> polinome) {
+	public CRCLookupTask(File file, List<LookupTable> lookupTables) {
 		_file = Objects.requireNonNull(file);
-		_polinome = Objects.requireNonNull(polinome);
+		_lookupTables = Objects.requireNonNull(lookupTables);
 	}
 	
 	@Override
 	public Item_I call() throws Exception {
 		List<Checksum> checksums = new LinkedList<>();
-		for(Long polinom : _polinome) {
-			checksums.add(new SchaefersChecksum(polinom));
+		for(LookupTable lookupTable : _lookupTables) {
+			checksums.add(new LookupTableChecksum(lookupTable));
 		}
 		
 		// Realen Inhalt der Datei verarbeiten
@@ -36,19 +37,22 @@ public class CRCTask implements Callable<Item_I> {
 			int bytesRead;
 			
 			while((bytesRead = in.read(buffer)) != -1) {
-				for(int i=0; i<_polinome.size(); i++) {
+				for(int i=0; i<_lookupTables.size(); i++) {
 					checksums.get(i).update(buffer, 0, bytesRead);
 				}
 			}
 		}
 		
 		// Nullen ranhängen, damit die Datei wirklich komplett verarbeitet wurde
-		for(int i=0; i<_polinome.size(); i++) {
-			int bytesNeeded = (Utility.numberOfBitsNeededForCoding(_polinome.get(i))-1)/8; // durch 8, um bits in bytes umzurechnen
+		for(int i=0; i<_lookupTables.size(); i++) {
+			LookupTable lookupTable = _lookupTables.get(i);
+			
+			int bytesNeeded = (Utility.numberOfBitsNeededForCoding(lookupTable.getPolinom())-1)/8; // durch 8, um bits in bytes umzurechnen
 			long messageLength = _file.length() + bytesNeeded;
 			// Extra Bytes Needed muss ein vielfaches von 12 sein, damit die Vergleichbarkeit mit
 			// Lookuptables der Länge 1, 2, 3 und 4 Byte ermöglicht wird (kleinster gemeinsamer Nenner)
 			int extraBytesNeeded = bytesNeeded + (int)(12-messageLength%12);
+			
 			checksums.get(i).update(new byte[extraBytesNeeded], 0, extraBytesNeeded);
 		}
 		
