@@ -2,6 +2,7 @@ package a4.example;
 
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.regex.Pattern;
@@ -26,8 +27,14 @@ public class SignatureProcessor implements SignatureProcessor_I {
         final String pathToRelatedFiles,
         final String filter
     ){
-        final File theDirectory = new File( pathToRelatedFiles );
-        
+		File theDirectory = new File(pathToRelatedFiles);
+		if(!theDirectory.isAbsolute()) {
+			// Versuch die Pfadangabe relativ vom Klassenpfad aufzulösen, falls es sich um eine relative Pfadangabe handelt
+			try {
+				theDirectory = new File(ClassLoader.getSystemResource(pathToRelatedFiles).toURI());
+			} catch (URISyntaxException ignore) {}
+		}
+		
         // do selfchecks
         if( ( ! theDirectory.exists())  ||  (! theDirectory.isDirectory()) ){
             throw new IllegalArgumentException(

@@ -47,7 +47,7 @@ public class SignatureProcessingStarter {
         }//for
     }//method()
     
-    private static final String SOURCE_FOLDER = "C:/Users/Lars/git/haw_bai5_wp_cp_ln/BAI5_WP_CP_Praktikum/res/img";
+    private static final String SOURCE_FOLDER = "img";
     private static final String FILTER_JPEG   = ".*\\.(J|j)(P|p)(E|e)?(G|g)$";
 	private static final String FILTER_TEXT   = ".*\\.([Tt][Xx][Tt])$";
     
