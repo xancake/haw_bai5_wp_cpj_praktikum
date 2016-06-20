@@ -2,7 +2,6 @@ package a4.solution.processor;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.lang.invoke.MethodHandles.Lookup;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +19,6 @@ import a4.api.Item_I;
 import a4.api.SignatureProcessor_I;
 import a4.solution.LookupTable;
 import a4.solution.tasks.CRCLookupTask;
-import a4.solution.tasks.CRCTask;
 
 public class LookupTableSignatureProcessor implements SignatureProcessor_I {
 	private boolean _recursive;
@@ -49,10 +47,7 @@ public class LookupTableSignatureProcessor implements SignatureProcessor_I {
 			}
 			
 			// Lookup-Table(s) berechnen
-			List<LookupTable> lookupTables = new ArrayList<>();
-			for(Long polinom : _polinome) {
-				lookupTables.add(new LookupTable(polinom, 8));
-			}
+			List<LookupTable> lookupTables = generateLookupTables(_polinome);
 			
 			// Aufsetzen des Thread-Pools
 			int availableProcessors = Runtime.getRuntime().availableProcessors();
@@ -84,6 +79,39 @@ public class LookupTableSignatureProcessor implements SignatureProcessor_I {
 			// Sollte nicht auftreten können, da der ClassLoader bereits 'null' zurückgibt,
 			// falls es keine Datei zu dem Pfad gibt (was auch auf ungültige Pfadangaben zutreffen sollte).
 			// Exception aber trotzdem werfen, damit nichts verschluckt wird 
+			throw new RuntimeException(e);
+		}
+	}
+	
+	private List<LookupTable> generateLookupTables(List<Long> polinome) {
+		try {
+			// Aufsetzen des Thread-Pools
+			int availableProcessors = Runtime.getRuntime().availableProcessors();
+			ExecutorService executorService = Executors.newFixedThreadPool(availableProcessors);
+			System.out.println("Threadpool mit maximal " + availableProcessors + " Threads gestartet");
+			
+			// Starten der Verarbeitung und Aufgeben der Tasks
+			Collection<Future<LookupTable>> futures = new LinkedList<>();
+			for(Long polinom : polinome) {
+				futures.add(executorService.submit(() -> new LookupTable(polinom, 1)));
+			}
+			
+			// Beenden des Thread-Pools
+			executorService.shutdown();
+			while(!executorService.awaitTermination(1, TimeUnit.MINUTES)) {
+				System.out.println("Thread-Pool noch nicht beendet, wir warten weiter...");
+			}
+			
+			List<LookupTable> lookupTables = new ArrayList<>();
+			for(Future<LookupTable> future : futures) {
+				lookupTables.add(future.get());
+			}
+			return lookupTables;
+		} catch (InterruptedException e) {
+			// TODO: überlegen, was sinnvoll wäre
+			throw new RuntimeException(e);
+		} catch (ExecutionException e) {
+			// TODO: überlegen, was sinnvoll wäre
 			throw new RuntimeException(e);
 		}
 	}

@@ -23,8 +23,9 @@ public class LookupTableChecksum implements Checksum {
 	
 	@Override
 	public void update(int b) {
-		int valueLUT = _lookupTable.lookup((int)(_crc & 0xffffffff));
+		int valueLUT = _lookupTable.lookup((int)_crc);
 		_crc = (_crc >>> _lookupTable.getSize()) ^ valueLUT ^ (b << _lookupTable.getSize());
+		System.out.printf("%8x | %8x%n", valueLUT, _crc);
 	}
 	
 	@Override
