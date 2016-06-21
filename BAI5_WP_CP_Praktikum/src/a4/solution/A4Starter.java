@@ -13,12 +13,12 @@ import a4.solution.processor.LookupTableSignatureProcessor;
 import a4.solution.processor.ParallelSignatureProcessor;
 
 public class A4Starter {
-	private static final String SOURCE_FOLDER = "img"; 
+	private static final String SOURCE_FOLDER = "img/6byte.txt"; 
 	private static final String FILTER_ALL    = ".*$";
 	private static final String FILTER_IMAGE  = ".*\\.(([Jj][Pp][Ee]?[Gg])|([Pp][Nn][Gg]))$";
 	private static final String FILTER_TEXT   = ".*\\.([Tt][Xx][Tt])$";
 	
-	private static final Long[] POLINOMIALS = new Long[] { 0x1000000afL, 0x100400007L, 0x104c11db7L, 0x127673637L };
+	private static final Long[] POLINOMIALS = new Long[] { 0x1000000afL/*, 0x100400007L, 0x104c11db7L, 0x127673637L */};
 	
 	public static void main(String[] args) {
 		String sourceFolder;
@@ -30,7 +30,7 @@ public class A4Starter {
 		
 //		SignatureProcessor_I processor = new SignatureProcessor(); // Referenz-Prozessor von Schäfers
 //		SignatureProcessor_I processor = new ParallelSignatureProcessor(true, POLINOMIALS);
-		SignatureProcessor_I processor = new LookupTableSignatureProcessor(true, POLINOMIALS);
+		SignatureProcessor_I processor = new LookupTableSignatureProcessor(true, 1, POLINOMIALS);
 		measure(processor, sourceFolder, FILTER_IMAGE, POLINOMIALS);
 	}
 	

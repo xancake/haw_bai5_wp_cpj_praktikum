@@ -24,14 +24,16 @@ import a4.solution.tasks.CRCTask;
 
 public class LookupTableSignatureProcessor implements SignatureProcessor_I {
 	private boolean _recursive;
+	private int _lookupTableSizeByte;
 	private List<Long> _polinome;
 
-	public LookupTableSignatureProcessor(boolean recursive, Long... polinome) {
-		this(recursive, Arrays.asList(polinome));
+	public LookupTableSignatureProcessor(boolean recursive, int lookupTableSizeByte, Long... polinome) {
+		this(recursive, lookupTableSizeByte, Arrays.asList(polinome));
 	}
 
-	public LookupTableSignatureProcessor(boolean recursive, List<Long> polinome) {
+	public LookupTableSignatureProcessor(boolean recursive, int lookupTableSizeByte, List<Long> polinome) {
 		_polinome = Objects.requireNonNull(polinome);
+		_lookupTableSizeByte = lookupTableSizeByte;
 		_recursive = recursive;
 	}
 	
@@ -95,7 +97,7 @@ public class LookupTableSignatureProcessor implements SignatureProcessor_I {
 			// Starten der Verarbeitung und Aufgeben der Tasks
 			Collection<Future<LookupTable>> futures = new LinkedList<>();
 			for(Long polinom : polinome) {
-				futures.add(executorService.submit(() -> new LookupTable(polinom, 1)));
+				futures.add(executorService.submit(() -> new LookupTable(polinom, _lookupTableSizeByte)));
 			}
 			
 			// Beenden des Thread-Pools
