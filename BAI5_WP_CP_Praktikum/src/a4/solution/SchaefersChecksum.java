@@ -34,7 +34,7 @@ public class SchaefersChecksum implements Checksum {
 			}
 			_crc >>>= 1;
 		}
-//		System.out.printf("%8x%n", _crc);
+		System.out.printf("%8x%n", _crc);
 	}
 	
 	@Override

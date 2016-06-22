@@ -30,10 +30,10 @@ public class LookupTable {
 		_bitMask = createBitMask(_size);
 		
 		_lookup = new int[(int)(Math.pow(2, _size))];
-		for(int i=0; i<_lookup.length; i++) {
+		for(int i=_lookup.length-1; i>=0; i--) {
 			long signature = i;
 			// Jedes Bit der Signatur muss verarbeitet werden, das ist abhängig von der größe der Lookup-Tabelle
-			for(int stillToDo=_size; stillToDo>=0; stillToDo--) {
+			for(int stillToDo=_size; stillToDo>0; stillToDo--) {
 				// da mit dem Original-Polynom gearbeitet wird, muss erst verknüpft und dann geSHIFTet werden - quasi die "Original-Idee"
 				if(0b1 == (signature & 0b1)) {
 					signature ^= _polinom;
@@ -68,6 +68,7 @@ public class LookupTable {
 	 */
 	public int lookup(int value) {
 		int lookupIndex = value & _bitMask;
+		System.out.printf("%8x | ", lookupIndex);
 		return _lookup[lookupIndex];
 	}
 	

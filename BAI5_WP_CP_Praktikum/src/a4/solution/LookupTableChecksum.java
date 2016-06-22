@@ -5,7 +5,7 @@ import java.util.zip.Checksum;
 
 public class LookupTableChecksum implements Checksum {
 	private LookupTable _lookupTable;
-	private long _crc;
+	private int _crc;
 	
 	public LookupTableChecksum(LookupTable lookupTable) {
 		_lookupTable = Objects.requireNonNull(lookupTable);
@@ -24,19 +24,15 @@ public class LookupTableChecksum implements Checksum {
 	@Override
 	public void update(int b) {
 		int valueLUT = _lookupTable.lookup((int)_crc);
-		_crc = (_crc >>> _lookupTable.getSize()) ^ valueLUT ^ ((long)b << _lookupTable.getSize());
+		_crc = (_crc >>> _lookupTable.getSize()) ^ valueLUT ^ (b << (32-_lookupTable.getSize()));
 		System.out.printf("%8x | %8x%n", valueLUT, _crc);
 	}
 	
 	@Override
 	public void update(byte[] b, int off, int len) {
-//		for(int bufferIndex=off; bufferIndex<len; bufferIndex++) {
-//			update(b[bufferIndex]);
-//		}
-		
 		int bytes = 0;
 		for(int bufferIndex=off; bufferIndex<len; bufferIndex++) {
-			bytes = bytes << 8 | b[bufferIndex];
+			bytes = bytes | b[bufferIndex] << 8*(bufferIndex%(_lookupTable.getSize()/8));
 			if((bufferIndex+1) % (_lookupTable.getSize()/8) == 0) {
 				update(bytes);
 				bytes = 0;

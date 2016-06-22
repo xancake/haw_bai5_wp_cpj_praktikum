@@ -13,7 +13,7 @@ import a4.solution.processor.LookupTableSignatureProcessor;
 import a4.solution.processor.ParallelSignatureProcessor;
 
 public class A4Starter {
-	private static final String SOURCE_FOLDER = "img/6byte.txt"; 
+	private static final String SOURCE_FOLDER = "img/6Byte.txt"; 
 	private static final String FILTER_ALL    = ".*$";
 	private static final String FILTER_IMAGE  = ".*\\.(([Jj][Pp][Ee]?[Gg])|([Pp][Nn][Gg]))$";
 	private static final String FILTER_TEXT   = ".*\\.([Tt][Xx][Tt])$";
