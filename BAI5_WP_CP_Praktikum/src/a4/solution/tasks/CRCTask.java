@@ -41,6 +41,7 @@ public class CRCTask implements Callable<Item_I> {
 			}
 		}
 		
+		// TODO: Die Nullen sollten direkt dem Buffer angehängt werden, wenn die Datei durch ist
 		// Nullen ranhängen, damit die Datei wirklich komplett verarbeitet wurde
 		for(int i=0; i<_polinome.size(); i++) {
 			int bytesNeeded = (Utility.numberOfBitsNeededForCoding(_polinome.get(i))-1)/8; // durch 8, um bits in bytes umzurechnen

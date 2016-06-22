@@ -12,13 +12,13 @@ public class FakePicGenerator {
     static public void main( final String... unused ) throws IOException{
         
         final long reasonableSize = 100_000_000_000L;
-        final long sizeAdaptedToQuota = 1_000_000_000L;
+        final long sizeAdaptedToQuota = 21_474_836_480L;
         final long sizeOfAllPics = sizeAdaptedToQuota;
         //
         final long theSeed = 13;
         final Random random = new Random( theSeed );
         //
-        final String rootPath = "Z:\\TRIAL\\PICs\\";
+        final String rootPath = "C:/Users/abs969/Desktop/20gb/";
         final Pattern pattern = Pattern.compile( "FakePic(\\d+)\\.[jJ][pP][gG]$" );
         
         

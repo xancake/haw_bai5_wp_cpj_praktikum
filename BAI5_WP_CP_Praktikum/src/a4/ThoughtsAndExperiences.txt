@@ -1,0 +1,62 @@
+==========[Entwurf 1]==========
+Der erste Entwurf hatte die Idee, ohne Lookup-Tabelle für jede Datei einen Task aufzugeben, der von einem Threadpool mit
+<Anzahl der Prozessoren> Threads die Tasks abarbeitet.
+
+Dieser Ansatz war bei einer Datenmenge von 1 GB dem Referenz-Prozessor ebenbürtig, wird bei 10 GB jedoch bereits 100 s
+langsamer und bei 20 GB ganze 250 s langsamer. Hierbei merkt man natürlich besonders den Vorteil einer Lookup-Tabelle.
+
+Beteiligte Klassen:
+- ParallelSignatureProcessor
+- CRCTask
+- SchaefersChecksum
+
+
+==========[Entwurf 2]==========
+Der zweite Entwurf basierte auf der Idee des ersten, nur dass für jedes Polinom pro Datei ein zusätzlicher Thread gestartet
+wird. Der Datei-Thread liest die Datei und gibt die gelesenen Chunks als Tasks auf, sodass jeder Thread für sein Polinom
+die Datei komplett verarbeiten kann.
+
+Dieser Ansatz hat bereits relativ früh schlechte Ergebnisse geliefert, was uns davon abgebracht hat diesen weiter zu verfolgen.
+Möglicherweise war jedoch die Programmierung dieses Ansatzes nicht ganz die Ideale.
+
+Beteiligte Klassen:
+- ParallelSignatureProcessor
+- CRCSplitTask
+- SchaefersChecksum
+
+
+==========[Entwurf 3]==========
+Der dritte Entwurf beinhaltet nun auch eine Lookup-Tabelle. Die Lookup-Tabelle soll dabei in der Größe (1, 2, 3, 4 Byte)
+konfigurierbar sein. Aktuell liefert jedoch nur eine Lookup-Tabelle der Größe 1 Byte die richtigen Ergebnisse.
+Hierbei war die Idee, dass pro Polinom ein Task zum Berechnen der Lookup-Tabelle einem Threadpool aufgegeben wird.
+Wenn alle Lookup-Tabellen berechnet wurden, verfolgt der Entwurf die Idee des 1. Entwurfs, sodass pro Datei ein Task
+aufgegeben wird, der von einem Threadpool mit <Anzahl der Prozessoren> Threads abgearbeitet wird.
+
+Leider gilt die Richtigkeit der Werte nur bei einer Lookup-Tabelle der Größe 1 Byte. Jedoch haben wir auch für 2 und 3 Byte
+vergleichenswerte Zeiten ermittelt. Diese können der Tabelle unten (Vergleich der Laufzeiten) entnommen werden.
+
+Beteiligte Klassen:
+- LookupTableSignatureProcessor
+- CRCTask
+- LookupTable
+- LookupTableChecksum
+
+
+==========[Vergleich der Laufzeiten]==========
++--------------+--------------------+---------------------------+----------------------------+----------------------------+-------------------------+
+| Ordner Größe |  ReferenzProzessor | Entwurf 3 (Lookup 1 Byte) | Entwurf 3  (Lookup 2 Byte) | Entwurf 3  (Lookup 3 Byte) | Entwurf 1 (ohne Lookup) |
++--------------+--------------------+---------------------------+----------------------------+----------------------------+-------------------------+
+|         1 GB |  24,176.020.821[s] |         14,531.698.601[s] |          13,977.306.213[s] |          28,008.388.434[s] |       23,848.266.377[s] |
+|        10 GB |  81,378.580.828[s] |         47,758.103.620[s] |          43,255.510.656[s] |         173,653.595.312[s] |      178,331.507.187[s] |
+|        20 GB | 277,107.276.324[s] |        333,838.623.799[s] |         717,250.651.448[s] |         480,800.068.310[s] |      527,865.838.952[s] |
++--------------+--------------------+---------------------------+----------------------------+----------------------------+-------------------------+
+
+Entwurf 3 mit Lookup 2 und 3 ist jedoch immernoch mit Vorsicht zu genießen, da hier nicht die richtigen Checksummen ermittelt werden
+und daraus folglich auch nicht geschlossen werden kann, dass die richtigen Werte in ähnlichen Zeiten berechnet werden.
+
+
+==========[Ideen]==========
+Eine Idee (die aber nie umgesetzt wurde) ist auch, einen eigenen InputStream zu implementieren, der die zusätzlich benötigten
+0-Bytes nach dem Ende der Datei liefert. Damit würde man die zusätzlichen 0en nicht als Spezialfall im verarbeitenden Code
+betrachten müssen. Möglicherweise würde das auch bereits unser Problem lösen, dass unser Entwurf 3 mit Lookup Größe von 2, 3
+(oder theoretisch 4) die letzten Bytes verschluckt.

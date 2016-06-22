@@ -13,7 +13,7 @@ import a4.solution.processor.LookupTableSignatureProcessor;
 import a4.solution.processor.ParallelSignatureProcessor;
 
 public class A4Starter {
-	private static final String SOURCE_FOLDER = "img/6Byte.txt"; 
+	private static final String SOURCE_FOLDER = "C:/Users/abs969/Desktop/20gb"; 
 	private static final String FILTER_ALL    = ".*$";
 	private static final String FILTER_IMAGE  = ".*\\.(([Jj][Pp][Ee]?[Gg])|([Pp][Nn][Gg]))$";
 	private static final String FILTER_TEXT   = ".*\\.([Tt][Xx][Tt])$";
@@ -30,7 +30,7 @@ public class A4Starter {
 		
 //		SignatureProcessor_I processor = new SignatureProcessor(); // Referenz-Prozessor von Schäfers
 //		SignatureProcessor_I processor = new ParallelSignatureProcessor(true, POLINOMIALS);
-		SignatureProcessor_I processor = new LookupTableSignatureProcessor(true, 1, POLINOMIALS);
+		SignatureProcessor_I processor = new LookupTableSignatureProcessor(true, 2, POLINOMIALS);
 		measure(processor, sourceFolder, FILTER_IMAGE, POLINOMIALS);
 	}
 	
