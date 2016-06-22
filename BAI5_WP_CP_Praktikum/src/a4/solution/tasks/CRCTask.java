@@ -31,7 +31,7 @@ public class CRCTask implements Callable<Item_I> {
 	public Item_I call() throws Exception {
 		// Realen Inhalt der Datei verarbeiten
 		try(final BufferedInputStream in = new BufferedInputStream(new FileInputStream(_file))) {
-			byte[] buffer = new byte[1024];
+			byte[] buffer = new byte[2400]; // Sollte ein vielfaches von 12 sein (wegen Lookup-Tables)
 			int bytesRead;
 			
 			while((bytesRead = in.read(buffer)) != -1) {
