@@ -18,7 +18,7 @@ public class A4Starter {
 	private static final String FILTER_IMAGE  = ".*\\.(([Jj][Pp][Ee]?[Gg])|([Pp][Nn][Gg]))$";
 	private static final String FILTER_TEXT   = ".*\\.([Tt][Xx][Tt])$";
 	
-	private static final Long[] POLINOMIALS = new Long[] { 0x1000000afL/*, 0x100400007L, 0x104c11db7L, 0x127673637L */};
+	private static final Long[] POLINOMIALS = new Long[] { 0x1000000afL, 0x100400007L, 0x104c11db7L, 0x127673637L };
 	
 	public static void main(String[] args) {
 		String sourceFolder;

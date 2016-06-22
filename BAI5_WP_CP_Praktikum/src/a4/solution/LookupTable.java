@@ -68,7 +68,6 @@ public class LookupTable {
 	 */
 	public int lookup(int value) {
 		int lookupIndex = value & _bitMask;
-		System.out.printf("%8x | ", lookupIndex);
 		return _lookup[lookupIndex];
 	}
 	
