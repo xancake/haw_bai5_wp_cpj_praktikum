@@ -16,6 +16,7 @@ import a4.example.Utility;
  *------------------------------------------------------------------------------
  */
 // Demo f�r 4Bit CRC (bzw. 5Bit Prim-Polynome)
+@SuppressWarnings("unused")
 public class DemoHelpUnderstanding {
     
     public static void main( final String... unused ){

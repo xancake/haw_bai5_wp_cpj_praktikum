@@ -3,7 +3,6 @@ package a4.demo;
 
 import java.io.File;
 import java.io.IOException;
-
 import a4.example.Utility;
 
 
@@ -15,6 +14,7 @@ import a4.example.Utility;
  *                                                Michael Schaefers  2016/05/17
  *------------------------------------------------------------------------------
  */
+@SuppressWarnings("unused")
 public class DemoVerySimpleSlowSequentialProcessorStarter {
     
     public static void main( final String... unused ){

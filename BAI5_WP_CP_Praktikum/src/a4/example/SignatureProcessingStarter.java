@@ -18,6 +18,7 @@ import a4.api.SignatureProcessor_I;
  *                                                Michael Schaefers  2016/05/17
  *------------------------------------------------------------------------------
  */
+@SuppressWarnings("unused")
 public class SignatureProcessingStarter {
     
     public static void main( final String... unused ){

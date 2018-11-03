@@ -17,6 +17,7 @@ import java.util.Set;
  *                                                Michael Schaefers  2016/05/17
  *------------------------------------------------------------------------------
  */
+@SuppressWarnings("unused")
 public class DemoAndReferenceProcessor {
     
     public int[] computeSignatures( final File file ){

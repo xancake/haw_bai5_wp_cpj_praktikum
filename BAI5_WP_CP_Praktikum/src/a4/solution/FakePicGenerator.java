@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("unused")
 public class FakePicGenerator {
     
     static public void main( final String... unused ) throws IOException{
